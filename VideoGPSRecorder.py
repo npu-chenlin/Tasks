@@ -59,7 +59,7 @@ def dataToTxt(cfg,q):
 				if(not flag):
 					flag=1
 					q.put(1)
-				f.writelines(read_GPS(gps))
+				f.writelines(r)
 			count+=1
 	
 	q.put(0)
