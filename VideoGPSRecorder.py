@@ -10,6 +10,7 @@ import cv2
 import requests,json
 import argparse
 import threading
+from queue import Queue
 
 
 def getTimestampUTC(l):
@@ -39,34 +40,50 @@ def read_GPS(gps):
 	while(not (l[0]=='$GPGGA' or l[0]=='$GNGGA')):
 		l=gps.readline().split(',')
 	r=parse_GPGGA(l)
-	if(not type(r) == str):
+	if(type(r) == list):
 		a=[str(i)+' ' for i in r]
 		a[-1]+="\n"
 		return a
 	else:
 		return r
 
-def dataToTxt(cfg):
+def dataToTxt(cfg,q):
 	path='GPS_data.txt'
 	count=0
+	flag=0
 	with open(path,'a') as f:
 		while count<100:
 			r=read_GPS(gps)
 			print(r)
 			if(type(r) == list):
+				if(not flag):
+					flag=1
+					q.put(1)
 				f.writelines(read_GPS(gps))
 			count+=1
+	
+	q.put(0)
+
 	return 0
 
-def captureVideo(videoCapture):
-	if(not os.path.exists('./pic')):
-		os.mkdir('./pic')
+def captureVideo(videoCapture,q):
+	if(not os.path.exists('./pics')):
+		os.mkdir('./pics')
+	videoCapture = cv2.VideoCapture(cfg.videoDevice)
 	sucess,frame=videoCapture.read()
+	flag=-1
 	while(sucess):
-		sucess,frame=videoCapture.read()
-		img=cv2.resize(frame,(1024,768))
-		path='./pics/'+str(time.time()-8*3600)+'.jpg'
-		cv2.imwrite(path,img)
+		while not q.empty():
+				flag=q.get()
+		if (flag==0):
+			break
+		if (flag==1):
+			sucess,frame=videoCapture.read()
+			img=cv2.resize(frame,(1024,768))
+			path='./pics/'+str(time.time()-8*3600)+'.jpg'
+			cv2.imwrite(path,img)
+
+	videoCapture.release()
 	return 0
 
 def testSerial(cfg):
@@ -100,10 +117,9 @@ if __name__=='__main__':
 		testSerial(cfg)
 	if( cfg.act == 'record' ):
 		gps = serial.Serial(cfg.port,cfg.baud)
-		videoCapture = cv2.VideoCapture(cfg.videoDevice)
-		
-		t1 = threading.Thread(target = captureVideo, args = (videoCapture,))
-		t2 = threading.Thread(target = dataToTxt, args = (cfg,))
+		q=Queue()
+		t1 = threading.Thread(target = captureVideo, args = (cfg,q))
+		t2 = threading.Thread(target = dataToTxt, args = (cfg,q))
 
 		t1.deamon = True
 		
@@ -111,4 +127,3 @@ if __name__=='__main__':
 		t2.start()
 
 		t2.join()
-		videoCapture.release()
