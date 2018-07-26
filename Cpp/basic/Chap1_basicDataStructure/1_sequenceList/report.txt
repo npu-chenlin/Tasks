@@ -1,0 +1,1 @@
+报错：undefined reference to `seqList<int>::insertElement(int)'模板类不支持分离实现。将.h与.cpp合并。
