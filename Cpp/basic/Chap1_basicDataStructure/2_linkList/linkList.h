@@ -50,12 +50,12 @@ template <typename T> bool linkList<T>::insertNode(int loc ,T newData)
 {
 	listNode<T>* p = head;
 	int j;
-	for (j = 0; j < loc; ++j)
+	for (j = 0; j < loc-1; ++j)
 	{
 		p=p->next;
 		if (p == NULL) break;
 	}
-	if (p == NULL && j < loc)
+	if (p == NULL && j < loc - 1)
 	{
 		return false;
 	}
