@@ -1,11 +1,8 @@
 #ifndef _BINARRYTREE_H
 #define _BINARRYTREE_H
-
 #include <iostream>
 #include <queue>
-
 template <typename T> class binaryTree;
-
 template <typename T> class binaryTreeNode
 {
 public:
@@ -56,7 +53,7 @@ public:
 	binaryTreeNode<T>* rChildNode(binaryTreeNode<T>* node);
 	binaryTreeNode<T>* brotherNode(binaryTreeNode<T>* node);
 
-	int getDepth(int numberOfNodes);
+	int getDepth(binaryTreeNode<T>* node);
 	void insertSubBT(binaryTreeNode<T>* node);
 
 private:
@@ -152,17 +149,17 @@ template <typename T> binaryTreeNode<T>* binaryTree<T>::parentNode(binaryTreeNod
 }
 template <typename T> binaryTreeNode<T>* binaryTree<T>::lChildNode(binaryTreeNode<T>* node)
 {
-	if (node != NULL) {return node->getLChild;}
+	if (node != NULL) return node->getLChild();
 	else return NULL;
 }
 template <typename T> binaryTreeNode<T>* binaryTree<T>::rChildNode(binaryTreeNode<T>* node)
 {
-	if (node != NULL) {return node->getRChild;}
+	if (node != NULL) return node->getRChild();
 	else return NULL;
 }
 template <typename T> binaryTreeNode<T>* binaryTree<T>::brotherNode(binaryTreeNode<T>* node)
 {
-	if (node == NULL)return NULL;
+    if (node == NULL){return NULL;}
 	binaryTreeNode<T>* parentNode = binaryTree<T>::parentNode(node);
 	if(parentNode == NULL)
 	{
@@ -177,21 +174,12 @@ template <typename T> binaryTreeNode<T>* binaryTree<T>::brotherNode(binaryTreeNo
 		return parentNode->getLChild();
 	}
 }
-
-template <typename T> int binaryTree<T>::getDepth(int numberOfNodes)
+template <typename T> int binaryTree<T>::getDepth(binaryTreeNode<T>* node)
 {
-	binaryTreeNode<T>* nodeStack = new binaryTreeNode<T>[numberOfNodes];
-	binaryTreeNode<T>* node;
-	int top = -1;
-	int maxDepth = 0 , currentDepth = 0;
 
-	top++;
-	nodeStack[]
 }
-
 template <typename T> void binaryTree<T>::insertSubBT(binaryTreeNode<T>* node)
 {
 
 }
-
 #endif
