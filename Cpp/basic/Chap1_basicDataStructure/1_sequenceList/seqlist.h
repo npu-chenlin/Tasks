@@ -39,6 +39,7 @@ template <typename T> bool seqList<T>::insertElement(T newElement)
 		return true;
 	}
 }
+
 template <typename T> bool seqList<T>::deleteElement(int loc)
 {	
 	if(loc < 0 || loc >= length) return false;
@@ -53,11 +54,13 @@ template <typename T> bool seqList<T>::deleteElement(int loc)
 		return true;
 	}
 }
+
 template <typename T> T seqList<T>::getElement(int loc)
 {
 	if(loc < 0 || loc >= length) return false;
 	else return element[loc];
 }
+
 template <typename T> bool seqList<T>::changeElement(int loc , T newElement)
 {
 	if (loc < 0 || loc >= length) return false;
