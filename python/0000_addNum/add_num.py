@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw,ImageFont
 import os
+
 def add_num(name):
 	font=ImageFont.truetype("C:\\WINDOWS\\Fonts\\SIMYOU.TTF", 120)
 	img=Image.open(name)
