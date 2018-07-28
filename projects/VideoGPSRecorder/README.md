@@ -1,4 +1,4 @@
-# This prog is built for testting GPS & record GPS data while taking pics.
+# This prog is built for testint GPS & recording GPS data while taking pics.
 ***
 It shall be run in the cmd window with at least 2 parameters.
 ```
@@ -16,10 +16,11 @@ optional arguments:
   --seeDetail SEEDETAIL
                         Show details. By default 0
 ```
-To make sure ur GPS is workable, u should run:  
+To test GPS , run:  
 `python VideoGPSRecorder.py --act testSerial --port <ur GPS path by default /dev/ttyUSB0> --baud <ur baudrate by default 115200>`  
+ 
+To record , run:  
+`python VideoGPSRecorder.py --port PORT --baud BAUD`
   
-Then run:`python VideoGPSRecorder.py --port PORT --baud BAUD`to record.
-  
-If u want to see more GPS details , run:
+To see more GPS details , run:  
 `VideoGPSRecorder.py --seeDetail 1`
