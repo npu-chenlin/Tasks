@@ -92,7 +92,7 @@ class GPS:
 
                 # FIXME: why only record 100 item
                 #while count<100:
-                while(1)
+                while(1):
                     r=self._read_GPS()
                     print(r)
                     if(type(r) == list):
