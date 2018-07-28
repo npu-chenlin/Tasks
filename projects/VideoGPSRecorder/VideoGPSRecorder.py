@@ -36,7 +36,8 @@ class GPS:
             return 'searching...'
 
     def _getTimestampUTC(self,l):#获取UTC时间。由于time.mktime函数只能精确到秒，故先将系统时间读取出来，再加上从GPS读取到的毫秒数。
-        t_ = time.gmtime(time.time())    
+        t_ = time.gmtime(time.time())
+        l=str(l)    
         t = (t_.tm_year,t_.tm_mon,t_.tm_mday,int(l[:2]),int(l[2:4]),int(l[4:6]),t_.tm_wday,t_.tm_yday,t_.tm_isdst)
         return time.mktime(t)+float(l[6:])
 
@@ -119,7 +120,7 @@ def parseArguments():
     parser.add_argument('--baud', default=115200, help='Serial port baud rate')
 
     parser.add_argument('--videoDevice', default=0, help='Video device number')
-    parser.add_argument('--seeDetail', default=0, help='Show details')
+    parser.add_argument('--seeDetail', default=0, help='Show details. By deault 0')
 
     df = time.strftime('data_%Y%m%d-%H%M%s')
     parser.add_argument('--dataPrefix', default=df, help='Stored data prefix')
