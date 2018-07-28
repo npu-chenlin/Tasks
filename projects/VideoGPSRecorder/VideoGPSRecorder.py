@@ -15,7 +15,9 @@ from queue import Queue
 
 def getUTC_timestamp():
     t_l      = time.time()
-    t_offset = time.localtime(t_l).tm_hour - time.gmtime(t_l).tm_hour
+    h_l      = time.localtime(t_l).tm_hour
+    h_g      = time.gmtime(t_l).tm_hour
+    t_offset = (h_l-h_g) if (h_l > h_g) else (h_l-h_g+24)  
     ts_utc   = t_l - t_offset*3600
     
     return ts_utc
@@ -84,7 +86,7 @@ class GPS:
 
     def dataToTxt(self,q):
         if(self.testSerial()):
-            path= os.path.join(self.cfg.dataPrefix, 'GPS_data.txt')
+            path= os.path.join(self.cfg.dataPrefix , 'GPS_data.txt')
             count=0
             flag=0
             with open(path,'a') as f:
