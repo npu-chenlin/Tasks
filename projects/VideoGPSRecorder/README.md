@@ -19,9 +19,7 @@ optional arguments:
 To make sure ur GPS is workable, u should run:  
 `python VideoGPSRecorder.py --act testSerial --port <ur GPS path by default /dev/ttyUSB0> --baud <ur baudrate by default 115200>`  
   
-Then run
-`python VideoGPSRecorder.py --port PORT --baud BAUD`
-to record.
+Then run:`python VideoGPSRecorder.py --port PORT --baud BAUD`to record.
   
-If u want to see more GPS details , run  
+If u want to see more GPS details , run:
 `VideoGPSRecorder.py --seeDetail 1`
