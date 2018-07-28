@@ -1,7 +1,10 @@
 #ifndef _DOUBLELIST_H
 #define _DOUBLELIST_H
+
 #include <iostream>
+
 template <typename T> class doubleListNode;
+
 template <typename T> class doubleList
 {
 public:
@@ -24,6 +27,7 @@ public:
 	
 	void clearAll();
 	T getData(int i);
+	
 private:
 	doubleListNode<T>* head;
 };
@@ -35,18 +39,23 @@ public:
 	{
 		next = NULL;
 	}
+
 	doubleListNode(T newData)
 	{
 		data = newData;
 		next = NULL;
 	}
+
 	~doubleListNode()
 	{
 		next = NULL;
 	}
+
+
 	T getData(){return data;}
 	doubleListNode<T>* getNext(){return next;}
 	doubleListNode<T>* getPrior(){return prior;}
+
 private:
 	friend class doubleList<T>;
 	doubleListNode<T>* next;
@@ -65,6 +74,7 @@ template <typename T> void doubleList<T>::insertNode(T newData)
 	newNode->data=newData;
 	p->next = newNode;
 }
+
 template <typename T> void doubleList<T>::insertNode(int loc , T newData)
 {
 	if(loc > this.getLength()){std::cout<<"out of range"<<std::endl;}
@@ -79,6 +89,7 @@ template <typename T> void doubleList<T>::insertNode(int loc , T newData)
 	newNode->next = p->next;
 	p->next = newNode;
 }
+
 template <typename T> void doubleList<T>::removeNode(doubleListNode<T>* q)
 {
 	doubleListNode<T>* p = head;
@@ -94,6 +105,7 @@ template <typename T> void doubleList<T>::removeNode(doubleListNode<T>* q)
 	p->next == q->next; 
 	delete q;
 }
+
 template <typename T> int doubleList<T>::getLength()
 {
 	doubleListNode<T>* p = head;
@@ -105,6 +117,7 @@ template <typename T> int doubleList<T>::getLength()
 	}
 	return i;
 }
+
 template <typename T> doubleListNode<T>* doubleList<T>::findNode(int i)
 {
 	doubleListNode<T>* p = head;
@@ -121,6 +134,7 @@ template <typename T> doubleListNode<T>* doubleList<T>::findNode(int i)
 		p = p->next;
 	}
 }
+
 template <typename T> doubleListNode<T>* doubleList<T>::findData(T item)
 {
 	doubleListNode<T>* p = head;
@@ -133,6 +147,7 @@ template <typename T> doubleListNode<T>* doubleList<T>::findData(T item)
 		}
 	}	
 }
+
 template <typename T> void doubleList<T>::clearAll()
 {
 	doubleListNode<T>* p;
@@ -143,6 +158,7 @@ template <typename T> void doubleList<T>::clearAll()
 		delete p;
 	}
 }
+
 template <typename T> T doubleList<T>::getData(int i)
 {
 	doubleListNode<T>* p = this.findNode(i);

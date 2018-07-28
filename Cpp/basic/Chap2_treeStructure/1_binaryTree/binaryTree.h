@@ -21,9 +21,11 @@ public:
 		lChild = rChild = NULL;
 	}
 	~binaryTreeNode();
+	
 	T getData() {return data;}
 	binaryTreeNode<T>* getLChild(){return lChild;}
 	binaryTreeNode<T>* getRChild(){return rChild;}
+	
 private:
 	friend class binaryTree<T>;
 	T data;
@@ -48,6 +50,7 @@ public:
 	{
 		delete root;
 	}
+	
 	void preOrder(binaryTreeNode<T>* node);// 前序中序后序遍历
 	void layOrder(binaryTreeNode<T>* node);// 层序遍历
 
@@ -108,6 +111,7 @@ template <typename T> void binaryTree<T>::layOrder(binaryTreeNode<T>* node)
 		}
 	}
 }
+
 template <typename T> binaryTreeNode<T>* binaryTree<T>::parentNode(binaryTreeNode<T>* node)
 {
 	int max = 50;
@@ -150,16 +154,19 @@ template <typename T> binaryTreeNode<T>* binaryTree<T>::parentNode(binaryTreeNod
 		return NULL;
 	}
 }
+
 template <typename T> binaryTreeNode<T>* binaryTree<T>::lChildNode(binaryTreeNode<T>* node)
 {
 	if (node != NULL) {return node->getLChild;}
 	else return NULL;
 }
+
 template <typename T> binaryTreeNode<T>* binaryTree<T>::rChildNode(binaryTreeNode<T>* node)
 {
 	if (node != NULL) {return node->getRChild;}
 	else return NULL;
 }
+
 template <typename T> binaryTreeNode<T>* binaryTree<T>::brotherNode(binaryTreeNode<T>* node)
 {
 	if (node == NULL)return NULL;
