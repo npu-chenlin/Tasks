@@ -105,8 +105,9 @@ class GPS:
         return 0    
 
 class captureVideo:
-    def __init__(self,videoDevice=0):
-        self.videoCapture = cv2.VideoCapture(videoDevice)
+    def __init__(self,cfg):
+        self.cfg = cfg
+        self.videoCapture = cv2.VideoCapture(cfg.videoDevice)
         self.flag=-1
         
 
@@ -146,6 +147,10 @@ def parseArguments():
     parser.add_argument('--baud', default=115200, help='Serial port baud rate')
 
     parser.add_argument('--videoDevice', default=0, help='Video device number')
+    parser.add_argument('--imgW', default=1024, help='Default image width')
+    parser.add_argument('--imgH', default=768, help='Default image height')
+    parser.add_argument('--FPS', default=30, help='Video frame per second')
+
     parser.add_argument('--seeDetail', default=0, help='Show details. By deault 0')
 
     df = time.strftime('data_%Y%m%d-%H%M%s')
@@ -185,7 +190,7 @@ if __name__=='__main__':
     elif( cfg.act == 'record' ):
         
         print('Initializing camera: '+str(cfg.videoDevice))
-        videoRecorder=captureVideo(cfg.videoDevice)
+        videoRecorder=captureVideo(cfg)
         print('Camera prepared')
         q=Queue()
         try:
