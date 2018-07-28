@@ -192,8 +192,6 @@ template <typename T> int binaryTree<T>::getDepth(int numberOfNodes)
 	int top = -1;
 	int maxDepth = 0 , currentDepth = 0;
 
-	top++;
-	nodeStack[]
 }
 
 template <typename T> void binaryTree<T>::insertSubBT(binaryTreeNode<T>* node)
