@@ -5,6 +5,7 @@
 
 
 import time,os,sys
+import numpy as np
 import serial
 import cv2
 #import requests,json
@@ -52,7 +53,7 @@ class GPS:
     def _getTimestampUTC(self,l):
         #获取UTC时间。由于time.mktime函数只能精确到秒，故先将系统时间读取出来，再加上从GPS读取到的毫秒数。
         t_ = time.gmtime(time.time())
-        l=str(l)    
+        l=str(l)
         t = (t_.tm_year,t_.tm_mon,t_.tm_mday,int(l[:2]),int(l[2:4]),int(l[4:6]),t_.tm_wday,t_.tm_yday,t_.tm_isdst)
         return time.mktime(t)+float(l[6:])
 
@@ -87,58 +88,56 @@ class GPS:
     def dataToTxt(self,q):
         if(self.testSerial()):
             path= os.path.join(self.cfg.dataPrefix , 'GPS_data.txt')
-            count=0
             flag=0
             with open(path,'a') as f:
             	print('Writing data to txt\n')
-
-                # FIXME: why only record 100 item
-                #while count<100:
-                while(1):
+                cv2.imshow('Press q to exit',np.zeros((20,10)))
+                while(cv2.waitKey(1) & 0xFF != ord('q')):
                     r=self._read_GPS()
                     print(r)
                     if(type(r) == list):
                         if(not flag):
-                            flag=1
+                            flag = 1
                             q.put(1)
                         f.writelines(r)
-                    count+=1
-        q.put(0)    
+                    else:
+                        if(flag):
+                            flag = 0
+                            q.put(0)
+        q.put(-1)
         return 0    
 
-class captureVideo:
+class CaptureVideo:
     def __init__(self,cfg):
         self.cfg = cfg
         self.videoCapture = cv2.VideoCapture(cfg.videoDevice)
-        self.flag=-1
-        
+        self.videoCapture.set(3,cfg.imgW)
+        self.videoCapture.set(4,cfg.imgH)
+        self.videoCapture.set(5,cfg.FPS)
+        self.flag=0
 
     def saveImg(self,q):
         p = os.path.join(self.cfg.dataPrefix, 'images')
-        os.path.mkdir(p)
+        os.mkdir(p)
 
         sucess,frame=self.videoCapture.read()
         while(sucess):
             while not q.empty():
                 self.flag=q.get()
-            if (self.flag==0):
-                break
-            if (self.flag==1):
+
+            if (self.flag == 0):
+                continue
+            if (self.flag == 1):
                 sucess,frame=self.videoCapture.read()
-
-                # FIXME: do not need to resize the image
-                #img=cv2.resize(frame,(1024,768))
-                img = frame
-
                 ts_utc = getUTC_timestamp()
                 path = os.path.join(p, "%f" % ts_utc + '.jpg')
-
-                cv2.imwrite(path,img)
+                cv2.imwrite(path,frame)
+            if (self.flag == -1):
+                break
 
     def __det__(self):
         self.videoCapture.release()
         print('Camera closed')
-
 
 def parseArguments():
     parser = argparse.ArgumentParser(description='Record video & GPS information')
@@ -149,8 +148,8 @@ def parseArguments():
     parser.add_argument('--baud', default=115200, help='Serial port baud rate')
 
     parser.add_argument('--videoDevice', default=0, help='Video device number')
-    parser.add_argument('--imgW', default=1024, help='Default image width')
-    parser.add_argument('--imgH', default=768, help='Default image height')
+    parser.add_argument('--imgW', default=640, help='Default image width')
+    parser.add_argument('--imgH', default=480, help='Default image height')
     parser.add_argument('--FPS', default=30, help='Video frame per second')
 
     parser.add_argument('--seeDetail', default=0, help='Show details. By deault 0')
@@ -168,9 +167,6 @@ if __name__=='__main__':
     # parse input arguments
     cfg = parseArguments()
 
-    # mkdir data store dir
-    os.path.mkdir(cfg.dataPrefix)
-
     # open GPS device
     gps=GPS(cfg)
     
@@ -178,11 +174,9 @@ if __name__=='__main__':
         t=time.time()
         while(time.time()-t<20):
             l=gps.ser.readline().split(',')
-            ti=time.time()-8*3600
             while(not (l[0]=='$GPGGA' or l[0]=='$GNGGA')):
                 l=gps.ser.readline().split(',')
-                ti=time.time()-8*3600
-            l.append(time.time()-8*3600)
+            l.append(getUTC_timestamp())
             l.append(gps._getTimestampUTC(l[1]))
             print(l)
 
@@ -190,9 +184,9 @@ if __name__=='__main__':
         gps.testSerial()
     
     elif( cfg.act == 'record' ):
-        
+        os.mkdir(cfg.dataPrefix)
         print('Initializing camera: '+str(cfg.videoDevice))
-        videoRecorder=captureVideo(cfg)
+        videoRecorder=CaptureVideo(cfg)
         print('Camera prepared')
         q=Queue()
         try:
