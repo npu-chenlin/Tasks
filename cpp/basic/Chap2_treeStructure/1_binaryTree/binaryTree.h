@@ -48,6 +48,7 @@ public:
 	}
 	~binaryTree()
 	{
+
 		delete root;
 	}
 	
@@ -60,8 +61,9 @@ public:
 	binaryTreeNode<T>* brotherNode(binaryTreeNode<T>* node);
 
 	int getDepth(int numberOfNodes);
-	void insertSubBT(binaryTreeNode<T>* node);
-
+    void insertSubBT(binaryTreeNode<T>* subBT , binaryTreeNode<T>* node);
+    void deleteNodes(binaryTreeNode<T>* node);
+    void destroyBT(binaryTreeNode<T>* node);
 private:
 	binaryTreeNode<T>* root;
 };
@@ -85,6 +87,7 @@ template <typename T> void binaryTree<T>::layOrder(binaryTreeNode<T>* node)
 	if( node != NULL)
 	{
 		binaryTreeNode<T>* current;
+
 		T* queue = new T[max];
 		queue[rear]=node;
 		rear++;
@@ -188,15 +191,65 @@ template <typename T> binaryTreeNode<T>* binaryTree<T>::brotherNode(binaryTreeNo
 template <typename T> int binaryTree<T>::getDepth(int numberOfNodes)
 {
 	binaryTreeNode<T>* nodeStack = new binaryTreeNode<T>[numberOfNodes];
-	binaryTreeNode<T>* node;
-	int top = -1;
-	int maxDepth = 0 , currentDepth = 0;
-
+    binaryTreeNode<T>* node = root;
+    nodeStack[0] = node;
+    int top = 0;
+    int maxDepth = 1 , currentDepth = 1;
+    while (!(node = NULL && top =-1))
+    {
+        while(node -> lChild != NULL)
+        {
+            node = node -> lChild;
+            nodeStack[++top] = node;
+            currentDepth++;
+        }
+        if(node -> rChild == NULL)
+        {
+            if(currentDepth > maxDepth)
+            {
+                maxDepth = currentDepth
+            }
+            node = nodeStack[--top];
+            currentDepth--;
+        }
+        else
+        {
+            node = node -> rChild;
+            nodeStack[++top] = node;
+            currentDepth++;
+        }
+    }
+    return maxDepth;
 }
 
-template <typename T> void binaryTree<T>::insertSubBT(binaryTreeNode<T>* node)
+template <typename T> void binaryTree<T>::insertSubBT(binaryTreeNode<T>* subBT , binaryTreeNode<T> *node)
 {
-
+    if(node == NULL) return NULL;
+    if(subBT -> root == NULL) return NULL;
+    if(node -> lChild == NULL)
+    {
+        node -> lChild == bt -> root;
+    }
+    else if(node -> rChild == NULL)
+    {
+        node -> rChild == bt -> root;
+    }
+    else return NULL;
 }
+template <typename T> void binaryTree<T>::deleteNodes(binaryTreeNode<T>* node)
+{
+    if(node != NULL)
+    {
+        deleteNodes(node->lChild);
+        deleteNodes(node->rChild);
+        delete node;
+    }
+}
+template <typename T> void binaryTree<T>::destroyBT()
+{
+    deleteNodes(root->lChild);
+    deleteNodes(root->rChild);
+    root = NULL;
+}s
 
 #endif
