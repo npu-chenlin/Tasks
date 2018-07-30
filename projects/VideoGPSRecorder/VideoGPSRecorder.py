@@ -16,11 +16,7 @@ from queue import Queue
 
 def getUTC_timestamp():
     t_l      = time.time()
-    h_l      = time.localtime(t_l).tm_hour
-    h_g      = time.gmtime(t_l).tm_hour
-    t_offset = (h_l-h_g) if (h_l > h_g) else (h_l-h_g+24)  
-    ts_utc   = t_l - t_offset*3600
-    
+    ts_utc   = t_l + time.altzone
     return ts_utc
 
 class GPS:
@@ -32,7 +28,7 @@ class GPS:
 
     def _parse_GPGGA(self,l):
         #解析传送过来的GPS信号
-        if(l[2]):
+        if(l[2] and l[1]):
             timestamp = self._getTimestampUTC(l[1])
             lon = float(l[4][0:3])+float(l[4][3:])/60
             lat = float(l[2][0:2])+float(l[2][2:])/60
@@ -176,8 +172,6 @@ if __name__=='__main__':
             l=gps.ser.readline().split(',')
             while(not (l[0]=='$GPGGA' or l[0]=='$GNGGA')):
                 l=gps.ser.readline().split(',')
-            l.append(getUTC_timestamp())
-            l.append(gps._getTimestampUTC(l[1]))
             print(l)
 
     elif( cfg.act == 'testSerial' ):
