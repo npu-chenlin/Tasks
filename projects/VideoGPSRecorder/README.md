@@ -29,7 +29,4 @@ To record , run:
 ## See detail 
 
 To see more GPS details, run:  
-```
-VideoGPSRecorder.py --seeDetail 1
-```
-
+`VideoGPSRecorder.py --seeDetail 1`
