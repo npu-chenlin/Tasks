@@ -5,11 +5,12 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-	linkList<int> list;
+	LinkList<int> list;
 	for (int i = 0; i < 10; ++i)
 	{
 		list.insertNode(i);
 	}
-	cout<<list.findNode(3)->getData()<<endl;
+	list.removeNode(3);
+	list.printLink();
 	return 0;
 }

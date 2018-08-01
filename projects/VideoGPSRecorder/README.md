@@ -1,4 +1,4 @@
-# This prog is built for testint GPS & recording GPS data while taking pics.
+﻿# This prog is built for recording GPS & images from camera.
 
 ## Usage
 It shall be run in the cmd window with at least 2 parameters.

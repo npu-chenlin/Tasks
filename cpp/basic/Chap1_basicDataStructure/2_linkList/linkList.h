@@ -1,54 +1,62 @@
 #ifndef _LINKLIST_H
 #define _LINKLIST_H
 #include <iostream>
-template <typename T> class linkList;
-template <typename T> class listNode
+
+template <typename T> class LinkList;
+template <typename T> class ListNode
 {
 public:
-	listNode()
+	ListNode()
 	{
 		next = NULL;
 	}
-	listNode(T newData , listNode<T>* nextNode = NULL)
+	ListNode(T newData , ListNode<T>* nextNode = NULL)
 	{
 		data = newData;
 		next = nextNode;
 	}
-	~listNode()
+	~ListNode()
 	{
 		next = NULL;
 	}
-	listNode<T>* getNext() {return next;}
+	ListNode<T>* getNext() {return next;}
 	T getData() {return data;}
+
 private:
-	friend class linkList<T>; 
-	listNode<T>* next;
+	friend class LinkList<T>; 
+	ListNode<T>* next;
 	T data;
 };
 
-template <typename T> class linkList
+template <typename T> class LinkList
 {
 public:
-	linkList()
+	LinkList()
 	{
-		head = new listNode<T>();
+		head = new ListNode<T>();
 	}
-	~linkList()
+	~LinkList()
 	{
 		delete head;
 	}
 	bool insertNode(int i , T newData);
 	bool insertNode(T newData);
-	bool removeNode(listNode<T>* q);
+
+	bool removeNode(ListNode<T>* q);
+	void removeNode(int n);
 	bool cleanLink();
-	listNode<T>* findNode(T q);
+
+	int getLength();
+	ListNode<T>* findNode(T q);
+	void printLink();
+
 private:
-	listNode<T>* head;
+	ListNode<T>* head;
 };
 
-template <typename T> bool linkList<T>::insertNode(int loc ,T newData)
+template <typename T> bool LinkList<T>::insertNode(int loc ,T newData)
 {
-	listNode<T>* p = head;
+	ListNode<T>* p = head;
 	int j;
 	for (j = 0; j < loc-1; ++j)
 	{
@@ -59,36 +67,54 @@ template <typename T> bool linkList<T>::insertNode(int loc ,T newData)
 	{
 		return false;
 	}
-	listNode<T>* newNode = new listNode<T>(newData);
+	ListNode<T>* newNode = new ListNode<T>(newData);
 	newNode->next = p->next;
 	p->next = newNode;
 	return true;
 }
-template <typename T> bool linkList<T>::insertNode(T newData)
+
+template <typename T> bool LinkList<T>::insertNode(T newData)
 {
-	listNode<T>* p = head;
+	ListNode<T>* p = head;
 	int j;
 	for (j = 0;; ++j)
 	{
 		if (p->next == NULL) break;
 		p=p->next;
 	}
-	listNode<T>* newNode = new listNode<T>(newData);
+	ListNode<T>* newNode = new ListNode<T>(newData);
 	p->next = newNode;
 	return true;
 }
-template <typename T> bool linkList<T>::removeNode(listNode<T>* q)
+
+template <typename T> bool LinkList<T>::removeNode(ListNode<T>* q)
 {
 	if (q == NULL) return 0;
-	listNode<T>* p = head;
+	ListNode<T>* p = head;
 	while(p->next != q) p = p->next;
 	p->next = q->next;
 	delete q;
 	return 1;
 }
-template <typename T> bool linkList<T>::cleanLink()
+
+template <typename T> void LinkList<T>::removeNode(int n)
 {
-	listNode<T>* currentP;
+	ListNode<T>* p = head;
+	int i = 1;
+	for (;p->next != NULL; ++i)
+	{
+		if (i == n)
+		{
+			break;
+		}
+		p = p->next;
+	}
+	p->next = p->next->next;
+}
+
+template <typename T> bool LinkList<T>::cleanLink()
+{
+	ListNode<T>* currentP;
 	while(head->next != NULL)
 	{
 		currentP = head->next;
@@ -97,9 +123,10 @@ template <typename T> bool linkList<T>::cleanLink()
 	}
 	return true;
 }
-template <typename T> listNode<T>* linkList<T>::findNode(T q)
+
+template <typename T> ListNode<T>* LinkList<T>::findNode(T q)
 {
-	listNode<T>* p = head;
+	ListNode<T>* p = head;
 	while(p->data != q)
 	{
 		if(p->next == NULL) break;
@@ -107,5 +134,26 @@ template <typename T> listNode<T>* linkList<T>::findNode(T q)
 	}
 	if(p->data != q) return 0;
 	return p;
+}
+
+template <typename T> void LinkList<T>::printLink()
+{
+	ListNode<T>* p = head;
+	while(p->next != NULL)
+	{
+		p = p->next;
+		std::cout<<p->getData()<<std::endl;
+	}
+}
+
+template <typename T> int LinkList<T>::getLength()
+{
+	ListNode<T>* p = head;
+	int i = 0;
+	for (;p->next != NULL; ++i)
+	{
+		p = p->next;
+	}
+	return i;
 }
 #endif
