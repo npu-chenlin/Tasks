@@ -34,7 +34,7 @@ private:
 	int v;
 	int e;
 	int** h;
-        vector<Dis> dis;
+    vector<Dis> dis;
 };
 
 Dijkstra::Dijkstra(int vertex)
@@ -68,11 +68,13 @@ Dijkstra::~Dijkstra()
 void Dijkstra::addE(int i, int j,int w)
 {
 	h[i][j] = w;
+	e++;
 }
 
 void Dijkstra::delE(int i ,int j)
 {
 	h[i][j] = MAX;
+	e--;
 }
 
 void Dijkstra::printM()
@@ -138,4 +140,6 @@ void Dijkstra::printMinPath(int begin)
 		cout<<dis[i].path<<" "<<dis[i].minValue<<endl;
 	}
 }
-#endif
+
+#endif // end of _DIJKSTRA_H
+ 
