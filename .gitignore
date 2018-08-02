@@ -2,7 +2,7 @@
 *.exe
 *.user*
 *autosave
-test
+test*
 a
 *.pro
 untitled.cpp
