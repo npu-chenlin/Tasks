@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
 	g.addE(3,4,2);
 	g.addE(3,5,3);
 	g.printM();
-	cout<<endl;]
+	cout<<endl;
 
 	g.printMinPath(0);
 
