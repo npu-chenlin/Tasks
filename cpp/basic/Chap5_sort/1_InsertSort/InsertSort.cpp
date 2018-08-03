@@ -1,12 +1,10 @@
 #include <iostream>
 template <typename T> void insertSort(T* d , int n)
 {
-	T key;
-	int i , j;
-	for (j = 1; j < n; ++j)
+	for (int j = 1; j < n; ++j)
 	{
-		key = d[j];
-                i = j;
+		T key = d[j];
+        int i = j;
 		while(key < d[i-1])
 		{
 			d[i] = d[i-1];

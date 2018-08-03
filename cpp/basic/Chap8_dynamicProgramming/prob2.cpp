@@ -1,12 +1,15 @@
-//最长公共子序列问题
+/**
+ * 最长公共子序列问题,给定序列x,y，求其最长公共子序列。
+ * x,y为给定序列，m,n为长度
+ * c[i][j]存储LCS长度
+ */
 #include <iostream>
 #include <list>
 using namespace std;
 
 void LCSlength(int*x , int *y, int m, int n, int **c)
 {
-//x,y为给定序列，m,n为长度
-//c[i][j]存储LCS长度
+
 	bool temp = false;
 
 	for (int i = 0; i < m; ++i)
@@ -63,7 +66,6 @@ void printM(int **c, int m, int n)
 
 void findPath(int*x , int *y, int m, int n, int **c, list<int>* path)
 {
-	int temp = c[m - 1][n - 1];
 	int a = m - 1;
 	int b = n - 1;
 	while (a >= 0 && b >= 0)
@@ -110,6 +112,6 @@ int main(int argc, char const *argv[])
 		delete [] c[i];
 	}
 	delete [] c;
-
+	delete path;
 	return 0;
 }

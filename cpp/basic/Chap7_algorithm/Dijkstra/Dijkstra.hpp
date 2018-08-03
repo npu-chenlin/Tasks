@@ -5,14 +5,17 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::string;
+using std::to_string;
+using std::vector;
 
 #define MAX 999
 
-
 struct Dis
 {
-	string path = "";
+	std::string path = "";
 	bool visited = 0;
     int minValue = MAX;
 };
@@ -20,7 +23,7 @@ struct Dis
 class Dijkstra
 {
 public:
-	Dijkstra(int vertex);
+	explicit Dijkstra(int vertex);
 	~Dijkstra();
 	void addE(int i ,int j ,int w);
 	void delE(int i ,int j);
@@ -34,8 +37,9 @@ private:
 	int v;
 	int e;
 	int** h;
-    vector<Dis> dis;
+    std::vector<Dis> dis;
 };
+
 
 Dijkstra::Dijkstra(int vertex)
 {
