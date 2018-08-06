@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "seqlist.h" // put local header below system headers
+#include "seqlist.hpp" // put local header below system headers
 
 using namespace std;
 

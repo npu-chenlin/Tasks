@@ -1,16 +1,17 @@
 #ifndef _SEQLIST_H
 #define _SEQLIST_H
 
-const int defaultSize=10; // Can you put the defaultSize to Template parameter?
+
 template <typename T> class seqList
 {
 public:
-	seqList(int size=defaultSize)
+	explicit seqList(int size = 10)
 	{
 		if (size > 0)
 		{
 			maxSize = size;
 			element = new T[maxSize];
+			length = 0;
 		}
 	}
 	~seqList()
@@ -24,6 +25,8 @@ public:
 	bool changeElement(int loc , T newData);
 
 private:
+	seqList<T>(const seqList<T>&);
+	seqList<T>& operator=(const seqList<T>&);
 	T* element;
 	int maxSize;
 	int length;
@@ -41,13 +44,13 @@ template <typename T> bool seqList<T>::insertElement(T newElement)
 }
 
 template <typename T> bool seqList<T>::deleteElement(int loc)
-{	
-	if(loc < 0 || loc >= length) return false;
+{
+	if (loc < 0 || loc >= length) return false;
 	else
 	{
 		for (int i = loc; i < length; ++i)
 		{
-			element[i] = element[i+1];
+			element[i] = element[i + 1];
 
 		}
 		length--;
@@ -57,7 +60,7 @@ template <typename T> bool seqList<T>::deleteElement(int loc)
 
 template <typename T> T seqList<T>::getElement(int loc)
 {
-	if(loc < 0 || loc >= length) return false;
+	if (loc < 0 || loc >= length) return false;
 	else return element[loc];
 }
 
