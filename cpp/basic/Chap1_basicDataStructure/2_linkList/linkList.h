@@ -1,8 +1,10 @@
 #ifndef _LINKLIST_H
 #define _LINKLIST_H
+
 #include <iostream>
 
 template <typename T> class LinkList;
+
 template <typename T> class ListNode
 {
 public:
@@ -39,6 +41,9 @@ public:
 	{
 		delete head;
 	}
+
+	// FIXME: the argument change to (int i, const T& newData) will be better
+	// 		same tips can be applied to following functions
 	bool insertNode(int i , T newData);
 	bool insertNode(T newData);
 
@@ -48,13 +53,14 @@ public:
 
 	int getLength();
 	ListNode<T>* findNode(T q);
-	void printLink();
+
+	void printLink(); // FIXME: the function name is not good, 'print' will be better
 
 private:
 	ListNode<T>* head;
 };
 
-template <typename T> bool LinkList<T>::insertNode(int loc ,T newData)
+template <typename T> bool LinkList<T>::insertNode(int loc, T newData)
 {
 	ListNode<T>* p = head;
 	int j;

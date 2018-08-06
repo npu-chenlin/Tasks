@@ -1,7 +1,7 @@
 #ifndef _SEQLIST_H
 #define _SEQLIST_H
 
-const int defaultSize=10;
+const int defaultSize=10; // Can you put the defaultSize to Template parameter?
 template <typename T> class seqList
 {
 public:
@@ -71,4 +71,4 @@ template <typename T> bool seqList<T>::changeElement(int loc , T newElement)
 	}
 }
 
-#endif
+#endif // end of _SEQLIST_H

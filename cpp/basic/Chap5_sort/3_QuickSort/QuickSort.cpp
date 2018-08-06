@@ -1,8 +1,10 @@
 #include <iostream>
 #include <stdio.h>
+
 using namespace std;
 
 template <typename T> int partition(T* d,int p,int r);
+
 template <typename T> void quickSort(T* d,int p,int r)
 {
 	int pos = r;
@@ -31,10 +33,15 @@ template <typename T> int partition(T* d,int p,int r)
 int main(int argc, char const *argv[])
 {
 	int d[] = {9,8,7,6,5,4,3,2,1,10};
+	
+	// do quick sort
 	quickSort<int>(d,0,9);
+	
+	// print results
 	for (int i = 0; i < 10; ++i)
-		{
-			printf("%d\n", d[i]);
-		}	
+	{
+		printf("%d\n", d[i]);
+	}	
+	
 	return 0;
 }

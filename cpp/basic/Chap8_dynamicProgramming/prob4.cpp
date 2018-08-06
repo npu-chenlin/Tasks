@@ -97,5 +97,6 @@ int main(int argc, char const *argv[])
 	}
 	delete [] tri;
 	delete [] path;
+	
 	return 0;
 }

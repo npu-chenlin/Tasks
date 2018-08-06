@@ -1,5 +1,6 @@
-#include "linkList.h"
 #include <iostream>
+
+#include "linkList.h"
 
 using namespace std;
 
@@ -10,7 +11,9 @@ int main(int argc, char const *argv[])
 	{
 		list.insertNode(i);
 	}
+
 	list.removeNode(3);
 	list.printLink();
+
 	return 0;
 }

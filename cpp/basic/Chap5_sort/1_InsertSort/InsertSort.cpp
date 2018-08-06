@@ -1,4 +1,6 @@
 #include <iostream>
+
+// FIXME: the code use tab of 4 (use spaces instead of tab) is better
 template <typename T> void insertSort(T* d , int n)
 {
 	for (int j = 1; j < n; ++j)
@@ -14,18 +16,22 @@ template <typename T> void insertSort(T* d , int n)
 
 	}
 }
+
 int main(int argc, char const *argv[])
 {
 	num = 10
 	int data[num];
+
 	for (int i = 0; i < num; ++i)
 	{
-        std::cin>>data[i];
+		std::cin>>data[i];
 	}
 	insertSort<int>(data,num);
+	
 	for (int i = 0; i < num; ++i)
 	{
-        std::cout<<data[i]<<std::endl;
+		std::cout<<data[i]<<std::endl;
 	}
+	
 	return 0;
 }

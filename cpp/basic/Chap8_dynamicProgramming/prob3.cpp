@@ -4,8 +4,10 @@
 
 #include <iostream>
 #include <list>
+
 using namespace std;
 
+// FIXME: `Cbeibao` is a bad name
 void Cbeibao(int goods[][2] , int n, int** dp, int c)
 {
 	for (int i = 0; i < n; ++i)
@@ -67,6 +69,7 @@ void findPath(int** dp, int n, int c, list<int>* path, int goods[][2])
 		cout << *p << endl;
 	}
 }
+
 int main(int argc, char const *argv[])
 {
 	int goods[][2] =
@@ -96,5 +99,6 @@ int main(int argc, char const *argv[])
 	}
 	delete [] dp;
 	delete path;
+	
 	return 0;
 }

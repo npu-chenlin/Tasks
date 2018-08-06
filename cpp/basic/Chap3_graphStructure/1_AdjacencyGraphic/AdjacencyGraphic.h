@@ -3,6 +3,8 @@
 
 #include<iostream>
 #include <vector>
+
+// FIXME: do not use namespace in header files
 using namespace std;
 
 template <typename T> class AdjacencyGraphic
@@ -34,6 +36,7 @@ public:
 	void bfs(int* visited , vector<T> &vec);
 
 	void printM();
+	
 private:
 	T NoEdge;
 	int v;
@@ -96,6 +99,7 @@ template <typename T> void AdjacencyGraphic<T>::add(int i, int j , T data)
 	e++;
 }
 
+// FIXME: if delete a edge failed? How to make the caller know the failure?
 template <typename T> void AdjacencyGraphic<T>::deleteEdge(int i,int j)
 {
 	if(exist(i ,j))
