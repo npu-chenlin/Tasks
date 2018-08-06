@@ -15,7 +15,7 @@ using std::vector;
 
 struct Dis
 {
-	std::string path = "";
+	string path = "";
 	bool visited = 0;
     int minValue = MAX;
 };

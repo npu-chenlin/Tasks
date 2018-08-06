@@ -6,7 +6,7 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
 	Dijkstra g(6);
-
+	max(1,2);
 	g.addE(0,1,6);
 	g.addE(0,2,3);
 	g.addE(1,3,5);
