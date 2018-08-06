@@ -9,13 +9,13 @@ template <typename T> class binaryTree;
 template <typename T> class binaryTreeNode
 {
 public:
-	binaryTreeNode()//无参数初始化节点
+	binaryTreeNode() //无参数初始化节点 FIXME: use English comment is better
 	{
 		data = NULL;
 		lChild = NULL;
 		rChild = NULL;
 	}
-	binaryTreeNode(T newData)//有参数初始化节点
+	binaryTreeNode(T newData) //有参数初始化节点
 	{
 		data = newData;
 		lChild = rChild = NULL;
@@ -64,6 +64,7 @@ public:
     void insertSubBT(binaryTreeNode<T>* subBT , binaryTreeNode<T>* node);
     void deleteNodes(binaryTreeNode<T>* node);
     void destroyBT(binaryTreeNode<T>* node);
+
 private:
 	binaryTreeNode<T>* root;
 };

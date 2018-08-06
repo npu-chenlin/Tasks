@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <iostream>
+
 using namespace std;
-template<typename T> void bubbleSort(T* d ,int n)
+
+template<typename T> void bubbleSort(T* d, int n)
 {
 	int flag = 1;
 	for (int j = 0; j < n-1 && flag; ++j)
@@ -22,9 +24,11 @@ int main(int argc, char const *argv[])
 {
 	int a[]={7,6,5,4,3,2,1,0};
 	bubbleSort<int>(a,8);
+
 	for (int i = 0; i < 8; ++i)
 	{
 		printf("%d ",a[i]);
 	}
+	
 	return 0;
 }

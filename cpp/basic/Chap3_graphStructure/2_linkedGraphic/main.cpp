@@ -1,5 +1,7 @@
 #include <iostream>
+
 #include "LinkedGraphic.h"
+
 using namespace std;
 
 int main(int argc, char const *argv[])
@@ -15,7 +17,9 @@ int main(int argc, char const *argv[])
 	g.add(3,7);
 	g.add(4,5);
 	g.add(6,7);
+
 	g.DFS();
 	cout<<endl;
+
 	return 0;
 }

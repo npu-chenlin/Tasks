@@ -5,11 +5,11 @@
  */
 #include <iostream>
 #include <list>
+
 using namespace std;
 
 void LCSlength(int*x , int *y, int m, int n, int **c)
 {
-
 	bool temp = false;
 
 	for (int i = 0; i < m; ++i)
@@ -113,5 +113,6 @@ int main(int argc, char const *argv[])
 	}
 	delete [] c;
 	delete path;
+	
 	return 0;
 }

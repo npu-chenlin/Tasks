@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <list>
+
 using namespace std;
 
 void fastestWay(int exitA , int entraA , int exitB, int entraB, int** a , int** t, int** line, int n)
@@ -20,7 +21,7 @@ void fastestWay(int exitA , int entraA , int exitB, int entraB, int** a , int** 
 	//n        装配站数量
 	int **f = new int*[2];
 	f[1] = new int[n];
-	f[2] = new int[n];
+	f[2] = new int[n];				// FIXME: better way to generate 2D array?
 	for (int i = 0; i < 2; ++i)
 	{
 		for (int j = 0; j < n; ++j)
@@ -69,8 +70,6 @@ void fastestWay(int exitA , int entraA , int exitB, int entraB, int** a , int** 
 		line[1][0] = 1;
 	}
 
-
-
 	delete f[1];
 	delete f[0];
 	delete [] f;
@@ -87,6 +86,8 @@ void findPath(int** line, int n)
 		/* code */
 	}
 }
+
+
 int main(int argc, char const *argv[])
 {
 	/* code */

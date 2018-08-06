@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include <list>
+
+// FIXME: the define of 'MAX' is good, can be changed to `DIST_MAX`. 
+//		Because `MAX` is common, the name will be conflict to other programs.
 #define MAX 999
 
 using namespace std;
@@ -163,4 +166,5 @@ void Floyd::printP()
 		}
 	}
 }
+
 #endif//end of _FLOYD_H
