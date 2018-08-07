@@ -2,7 +2,7 @@
 #define _SEQLIST_H
 
 
-template <typename T> class seqList
+template <typename T, int defaultSize> class seqList
 {
 public:
 	explicit seqList(int size = 10)
@@ -25,14 +25,14 @@ public:
 	bool changeElement(int loc , T newData);
 
 private:
-	seqList<T>(const seqList<T>&);
-	seqList<T>& operator=(const seqList<T>&);
+	seqList<T,defaultSize>(const seqList<T,defaultSize>&);
+	seqList<T,defaultSize>& operator=(const seqList<T,defaultSize>&);
 	T* element;
 	int maxSize;
 	int length;
 };
 
-template <typename T> bool seqList<T>::insertElement(T newElement)
+template <typename T, int defaultSize> bool seqList<T,defaultSize>::insertElement(T newElement)
 {
 	if (length >= maxSize) return false;
 	else
@@ -43,7 +43,7 @@ template <typename T> bool seqList<T>::insertElement(T newElement)
 	}
 }
 
-template <typename T> bool seqList<T>::deleteElement(int loc)
+template <typename T, int defaultSize> bool seqList<T,defaultSize>::deleteElement(int loc)
 {
 	if (loc < 0 || loc >= length) return false;
 	else
@@ -58,13 +58,13 @@ template <typename T> bool seqList<T>::deleteElement(int loc)
 	}
 }
 
-template <typename T> T seqList<T>::getElement(int loc)
+template <typename T, int defaultSize> T seqList<T,defaultSize>::getElement(int loc)
 {
 	if (loc < 0 || loc >= length) return false;
 	else return element[loc];
 }
 
-template <typename T> bool seqList<T>::changeElement(int loc , T newElement)
+template <typename T, int defaultSize> bool seqList<T,defaultSize>::changeElement(int loc , T newElement)
 {
 	if (loc < 0 || loc >= length) return false;
 	else

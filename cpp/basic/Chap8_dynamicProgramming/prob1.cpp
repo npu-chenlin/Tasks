@@ -26,7 +26,7 @@ void fastestWay(int exitA , int entraA , int exitB, int entraB, int** a , int** 
 	{
 		for (int j = 0; j < n; ++j)
 		{
-			f[i][j] == -1;
+			f[i][j] = -1;
 		}
 	}
 
