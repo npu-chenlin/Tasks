@@ -21,7 +21,7 @@ public:
 		lChild = rChild = NULL;
 	}
 
-
+	void setData(T newData) {data = newData;}
 	T getData() {return data;}
 	BinaryTreeNode<T>* getLChild() {return lChild;}
 	BinaryTreeNode<T>* getRChild() {return rChild;}

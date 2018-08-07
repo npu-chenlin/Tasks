@@ -1,12 +1,12 @@
 #include <iostream>
 
-#include "AdjacencyGraphic.h"
+#include "AdjacencyGraphic.hpp"
 
 using namespace std;
 
 int main(int argc, char const *argv[])
 {
-	AdjacencyGraphic<int> g(10);
+	AdjacencyGraphic g(10);
 
 	g.add(0,1,1);
 	g.add(0,2,1);

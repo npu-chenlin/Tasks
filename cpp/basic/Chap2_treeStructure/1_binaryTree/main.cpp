@@ -11,6 +11,11 @@
 int main(int argc, char const *argv[])
 {
 	BinaryTree<int> tree(0);
+	BinaryTreeNode<int> node[10];
+	for (int i = 0; i < 10; ++i)
+	{
+		node[i].setData(i);
+	}
 	BinaryTreeNode<int> node1(1);
 	BinaryTreeNode<int> node2(2);
 	BinaryTreeNode<int> node3(3);
