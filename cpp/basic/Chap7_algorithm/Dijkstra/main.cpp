@@ -19,6 +19,11 @@ int main(int argc, char const *argv[])
     cout<<endl;
 
     g.printMinPath(0);
+    g.printMinPath(1);
+    g.printMinPath(2);
+    g.printMinPath(3);
+    g.printMinPath(4);
+    g.printMinPath(5);
 
     return 0;
 }
