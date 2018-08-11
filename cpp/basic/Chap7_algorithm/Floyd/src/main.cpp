@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Floyd.hpp"
+#include "../libfloyd/Floyd.h"
 
 using namespace std;
 

@@ -91,7 +91,7 @@ void Dijkstra::minPath(int begin)
     dis.resize(v);
     for (int i = 0; i < v; ++i)
     {
-        dis[i].path = std::__cxx11::to_string(begin) + "->";
+        dis[i].path     = std::__cxx11::to_string(begin) + "->";
         dis[i].minValue = h[begin][i];
     }
 
@@ -105,7 +105,7 @@ void Dijkstra::minPath(int begin)
         {
             if (dis[i].visited == 0 && dis[i].minValue < min)
             {
-                min = dis[i].minValue;
+                min  = dis[i].minValue;
                 temp = i;
             }
         }
@@ -120,7 +120,7 @@ void Dijkstra::minPath(int begin)
                 if (dis[temp].minValue + h[temp][i] < dis[i].minValue)
                 {
                     dis[i].minValue = dis[temp].minValue + h[temp][i];
-                    dis[i].path += std::__cxx11::to_string(temp) + "->";
+                    dis[i].path     += std::__cxx11::to_string(temp) + "->";
                 }
             }
         }
