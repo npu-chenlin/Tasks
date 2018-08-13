@@ -1,2 +1,0 @@
-/usr/bin/ar qc liblibfloyd.a  CMakeFiles/libfloyd.dir/Floyd.cpp.o
-/usr/bin/ranlib liblibfloyd.a
