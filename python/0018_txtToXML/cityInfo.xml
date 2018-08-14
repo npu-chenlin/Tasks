@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+  <cities>
+&lt;!-- 
+	城市信息
+--&gt;
+{
+    "1" : "上海",
+    "2" : "北京",
+    "3" : "成都"
+}</cities>
+</root>

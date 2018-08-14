@@ -1,0 +1,9 @@
+*.gch
+*.exe
+*.user*
+*autosave
+tes*
+*.pro
+untitled.cpp
+build
+bin
