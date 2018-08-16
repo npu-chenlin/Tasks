@@ -77,7 +77,7 @@ template <typename T> void doubleList<T>::insertNode(T newData)
 
 template <typename T> void doubleList<T>::insertNode(int loc , T newData)
 {
-	if(loc > this.getLength()){std::cout<<"out of range"<<std::endl;}
+	if(loc > this->getLength()){std::cout<<"out of range"<<std::endl;}
 	doubleListNode<T>* newNode = new doubleListNode<T>(newData);
 	newNode->data=newData;
 
@@ -97,7 +97,7 @@ template <typename T> void doubleList<T>::removeNode(doubleListNode<T>* q)
 	{
 		if(p == NULL){
 			std::cout<<"cant find node q"<<std::endl;
-			return 0;
+			return;
 		}
 		p = p->next;
 	}
@@ -121,7 +121,7 @@ template <typename T> int doubleList<T>::getLength()
 template <typename T> doubleListNode<T>* doubleList<T>::findNode(int i)
 {
 	doubleListNode<T>* p = head;
-	if(i > this.getLength()) 
+	if(i > this->getLength()) 
 	{
 		std::cout<<"out of range"<<std::endl;
 		return 0;
@@ -161,7 +161,7 @@ template <typename T> void doubleList<T>::clearAll()
 
 template <typename T> T doubleList<T>::getData(int i)
 {
-	doubleListNode<T>* p = this.findNode(i);
+	doubleListNode<T>* p = this->findNode(i);
 	return p->data;
 }
 

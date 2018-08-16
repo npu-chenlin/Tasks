@@ -1,0 +1,3 @@
+add_subdirectory(1_InsertSort)
+add_subdirectory(2_BubbleSort)
+add_subdirectory(3_QuickSort)

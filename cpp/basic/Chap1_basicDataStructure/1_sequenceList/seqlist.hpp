@@ -2,7 +2,7 @@
 #define _SEQLIST_H
 
 
-template <typename T, int defaultSize> class seqList
+template <typename T, int defaultSize=10> class seqList
 {
 public:
 	explicit seqList(int size = 10)

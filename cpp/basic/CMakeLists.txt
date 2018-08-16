@@ -1,0 +1,8 @@
+add_subdirectory(Chap1_basicDataStructure)
+add_subdirectory(Chap2_treeStructure)
+add_subdirectory(Chap3_graphStructure)
+add_subdirectory(Chap5_sort)
+add_subdirectory(Chap7_algorithm)
+add_subdirectory(Chap8_dynamicProgramming)
+add_subdirectory(Chap9_greedyAlgorithm)
+add_subdirectory(Other)

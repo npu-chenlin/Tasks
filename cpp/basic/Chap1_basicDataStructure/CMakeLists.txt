@@ -1,0 +1,4 @@
+add_subdirectory(1_sequenceList)
+add_subdirectory(2_linkList)
+add_subdirectory(3_doubleList)
+add_subdirectory(4_stack)
