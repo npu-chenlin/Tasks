@@ -7,6 +7,11 @@
 #include <QMouseEvent>
 #include <QMessageBox>
 
+struct Point{
+    int x;
+    int y;
+};
+
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -16,9 +21,11 @@ public:
     ~MainWindow();
 
     int evaluater(int, int, bool);//0 is white , 1 is black
-    void dropChessman(bool);
-    static const int SIZE = 14;
-    const int WIDTH = 40;
+    Point dropChessman(bool);
+    void thinker(bool player);
+
+    static const int SIZE = 15;
+    const int WIDTH = 30;
     const int x_offset = 20, y_offset = 20;
 
 protected:
@@ -29,7 +36,7 @@ private slots:
 private:
     void paintEvent(QPaintEvent *);//绘图函数声明
     bool isWin(int , int);
-    QPainter *paint;
+    QPainter paint;
 
 private:
     friend class ComputerPlayer;
