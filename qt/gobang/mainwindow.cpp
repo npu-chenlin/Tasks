@@ -79,7 +79,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                 m[p.x][p.y] = -1;
                 if (isWin(p.x, p.y))
                 {
-                    if (m[i][j] == 1)
+                    if (m[p.x][p.y] == 1)
                     {
                         QMessageBox::information(NULL, tr("Game Over"), tr("Black Win!"));
                     }
