@@ -190,7 +190,7 @@ Point MainWindow::dropChessman(bool player)
             }
         }
     }
-    attackScore+=3;
+    attackScore+=2;
     if (attackScore > defenceScore)
     {
         p.x=m0;
