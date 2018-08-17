@@ -6,10 +6,16 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QMessageBox>
+struct trend{
+    int Num;
+    bool isEmpty;
+};
 
 struct Point{
     int x;
     int y;
+    trend dir[8];
+    int score;
 };
 
 class MainWindow : public QWidget
@@ -20,7 +26,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    int evaluater(int, int, bool);//0 is white , 1 is black
+    Point evaluater(int, int, bool);//0 is white , 1 is black
     Point dropChessman(bool);
     void thinker(bool player);
 
