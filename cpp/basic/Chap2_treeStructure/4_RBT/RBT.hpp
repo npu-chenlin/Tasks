@@ -2,64 +2,34 @@
 #define _RBT_H
 
 #include <iostream>
+#include <string>
 #include <list>
 #include <vector>
 
 using std::cout;
 using std::endl;
+using std::string;
 
-template <typename T> class RBT;
-
-template <typename T> class RBTNode
-{
-public:
-    RBTNode()
-    {
-        data   = NULL;
-        lChild = rChild = parent = NULL;
-        color  = true;
-    }
-    explicit RBTNode(T newData, bool color = true)
-    {
-        data   = newData;
-        lChild = rChild = parent = NULL;
-        this->color  = color;
-    }
-
-    ~RBTNode() {}
-
-    void setData(T newData) {data = newData;}
-    T getData() {return data;}
-    void setColor(bool color) {this->color = color;}
-    RBTNode<T>* getLChild() {return lChild;}
-    RBTNode<T>* getRChild() {return rChild;}
-    RBTNode<T>* getParent() {return parent;}
-
-private:
-    friend class RBT<T>;
-    T data;
-    RBTNode<T> *lChild, *rChild, *parent;
-    bool color; //Black is 0, red is 1;
-};
+template <typename T> class RBTNode;
 
 template <typename T> class RBT
 {
 public:
     RBT()
     {
-        root  = NULL;
+        root  = RBTNode<T>::nil;
         count = 0;
     }
     explicit RBT(T newData)
     {
-        root = RBTNode<T>(newData, false);
+        root  = new RBTNode<T>(newData, false);
         count = 0;
     }
     ~RBT()
-    {
-        root = NULL;
-
-    }
+	{
+		delete root;
+		root = NULL;
+	}
 
     void insertNode(RBTNode<T>* node);
     void deleteNode(RBTNode<T>* node);
@@ -68,28 +38,79 @@ public:
     void leftRotated(RBTNode<T>* node);
     void rightRotated(RBTNode<T>* node);
 
+    RBTNode<T>* getRoot() {return root;}
+    void inOrder(RBTNode<T>* node);
+    void preOrder(RBTNode<T>* node);
+
 private:
     RBTNode<T>* root;
     int count; //number of nodes
 };
 
+template <typename T> class RBTNode
+{
+public:
+    RBTNode()
+    {
+        data   = 0;
+        lChild = rChild = parent = NULL;
+        color  = false;
+    }
+    explicit RBTNode(T newData, bool color = true)
+    {
+        data   = newData;
+        lChild = rChild = parent = nil;
+        this->color  = color;
+    }
+    ~RBTNode() {}
+
+	static RBTNode<T>* nil;
+
+    void setData(T newData) {data = newData;}
+    T getData() {return data;}
+    string getColor()
+    {
+        if(color) return "red";
+    	else return "black";
+	}
+    void setColor(bool color) {this->color = color;}
+    RBTNode<T>* getLChild() {return lChild;}
+    RBTNode<T>* getRChild() {return rChild;}
+    RBTNode<T>* getParent() {return parent;}
+
+private:
+    friend class RBT<T>;
+    template <typename TT> friend RBTNode<TT>* findUncle(RBTNode<TT>*);
+    
+    T data;
+    RBTNode<T> *lChild, *rChild, *parent;
+    bool color; //Black is 0, red is 1;
+};
+template <typename T> RBTNode<T>* RBTNode<T>::nil = new RBTNode<T>();
+
+template <typename T> RBTNode<T>* findUncle(RBTNode<T>* node)
+{
+    if (node->parent == RBTNode<T>::nil) return NULL;
+    if (node->parent->parent->lChild == node->parent) return node->parent->parent->rChild;
+    else return node->parent->parent->lChild;
+}
+
 template <typename T> void RBT<T>::insertNode(RBTNode<T>* node)
 {
-    if (!root)
+    ++count;
+    if (root == RBTNode<T>::nil)
     {
         root = node;
-        root->color = false;
         return;
     }
-    ++count;
+    
     RBTNode<T>* cur, * temp = root;
-
-    while (temp != NULL)
+    while (temp != RBTNode<T>::nil)
     {
         cur = temp;
         if (node->data < temp->data)
         {
-            temp = temp->lChild;
+            temp = temp->lChild; 
         }
         else
         {
@@ -104,6 +125,8 @@ template <typename T> void RBT<T>::insertNode(RBTNode<T>* node)
     }
     else
         cur->rChild = node;
+
+    insertKeepRBT(node);
 }
 
 template <typename T> void RBT<T>::deleteNode(RBTNode<T>* node)
@@ -196,9 +219,10 @@ template <typename T> void RBT<T>::deleteNode(RBTNode<T>* node)
 
 template <typename T> void RBT<T>::leftRotated(RBTNode<T> *node)
 {
-    if (node->parent == NULL)
+    if (node->parent == RBTNode<T>::nil)
     {
-        node->rChild->parent = NULL;
+        node->rChild->parent = RBTNode<T>::nil;
+        root = node->rChild;
     }
     else
     {
@@ -209,19 +233,20 @@ template <typename T> void RBT<T>::leftRotated(RBTNode<T> *node)
 
     node->parent = node->rChild;
 
-    if (node->rChild->lChild)
+    if (node->rChild->lChild != RBTNode<T>::nil)
     {
         node->rChild->lChild->parent = node;
-        node->rChild                 = node->rChild->lChild;
     }
+    node->rChild = node->rChild->lChild;
     node->parent->lChild = node;
 }
 
 template <typename T> void RBT<T>::rightRotated(RBTNode<T> *node)
 {
-    if (node->parent == NULL)
+    if (node->parent == RBTNode<T>::nil)
     {
-        node->lChild->parent = NULL;
+        node->lChild->parent = RBTNode<T>::nil;
+        root = node->lChild;
     }
     else
     {
@@ -235,15 +260,98 @@ template <typename T> void RBT<T>::rightRotated(RBTNode<T> *node)
     if (node->lChild->rChild)
     {
         node->lChild->rChild->parent = node;
-        node->lChild = node->lChild->rChild;
     }
+    
+	node->lChild = node->lChild->rChild;
     node->parent->rChild = node;
 }
 
 template <typename T> void RBT<T>::insertKeepRBT(RBTNode<T> *node)
 {
-    
+    /**
+     * Current node is root
+     */
+    if (node->parent == RBTNode<T>::nil)
+    {
+        node->color = false;
+        return;
+    }
+    /**
+     * Current node is red
+     */
+    if (node->parent->color == true)
+    {
+        /**
+         * Current node 's father node is red while uncle is also red.
+         */
+        if (findUncle(node)->color == true)
+        {
+            node->parent->parent->color = true;
+            node->parent->color = false;
+            findUncle(node)->color = false;
 
+            insertKeepRBT(node->parent->parent);
+        }
+        else if(node->parent == node->parent->parent->rChild) //node's parent node is node's grand node's right child
+        {
+            /**
+              * Current node is its father's right child while uncle is black
+              */
+            if (node == node->parent->rChild && findUncle(node)->color == false )
+            {
+                node->parent->color = false;
+                node->parent->parent->color = true;
+                leftRotated(node->parent->parent);
+            }
+
+            /**
+              * Current node is its father's left child while uncle is black
+              */
+            else if (node == node->parent->lChild && findUncle(node)->color == false )
+            {
+                rightRotated(node->parent);
+                insertKeepRBT(node->rChild);
+            }
+        }
+        else
+        {
+            /**
+              * Current node is its father's right child while uncle is black
+              */
+            if (node == node->parent->rChild && findUncle(node)->color == false )
+            {
+                leftRotated(node->parent);
+                insertKeepRBT(node->lChild);
+            }
+
+            /**
+              * Current node is its father's left child while uncle is black
+              */
+            else if (node == node->parent->lChild && findUncle(node)->color == false )
+            {
+                node->parent->color = false;
+                node->parent->parent->color = true;
+                rightRotated(node->parent->parent);
+            }
+        }
+    }
+    else
+        return;
 }
 
+template <typename T> void RBT<T>::inOrder(RBTNode<T>* node)
+{
+	if(node == RBTNode<T>::nil) return;
+    inOrder(node->lChild);
+    cout<<node->data<<" "<<node->getColor()<<endl;
+ 	inOrder(node->rChild);
+}
+
+template <typename T> void RBT<T>::preOrder(RBTNode<T>* node)
+{
+	if(node == RBTNode<T>::nil) return;
+    cout<<node->data<<" "<<node->getColor()<<endl;
+    preOrder(node->lChild);
+    preOrder(node->rChild);
+}
 #endif //end of _RBT_H
