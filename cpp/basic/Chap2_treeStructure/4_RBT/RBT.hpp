@@ -23,14 +23,16 @@ public:
         count = 0;
     }
     ~RBT()
-	{
-		root = NULL;
-	}
+    {
+        root = NULL;
+    }
 
     void insertNode(std::shared_ptr<RBTNode<T>> node);
-    void deleteNode(std::shared_ptr<RBTNode<T>> node);
+    bool deleteNode(T data);
 
     void insertKeepRBT(std::shared_ptr<RBTNode<T>> node);
+    void deleteKeepRBT(std::shared_ptr<RBTNode<T>> node);
+
     void leftRotated(std::shared_ptr<RBTNode<T>> node);
     void rightRotated(std::shared_ptr<RBTNode<T>> node);
 
@@ -58,7 +60,9 @@ public:
         lChild = rChild = parent = nil;
         this->color  = color;
     }
-    ~RBTNode() {}
+    ~RBTNode() {
+        lChild = rChild = parent = NULL;
+    }
 
     static std::shared_ptr<RBTNode<T>> nil;
 
@@ -67,8 +71,8 @@ public:
     std::string getColor()
     {
         if(color) return "red";
-    	else return "black";
-	}
+        else return "black";
+    }
     void setColor(bool color) {this->color = color;}
     std::shared_ptr<RBTNode<T>> getLChild() {return lChild;}
     std::shared_ptr<RBTNode<T>> getRChild() {return rChild;}
@@ -106,7 +110,7 @@ template <typename T> void RBT<T>::insertNode(std::shared_ptr<RBTNode<T>> node)
         cur = temp;
         if (node->data < temp->data)
         {
-            temp = temp->lChild; 
+            temp = temp->lChild;
         }
         else
         {
@@ -125,91 +129,100 @@ template <typename T> void RBT<T>::insertNode(std::shared_ptr<RBTNode<T>> node)
     insertKeepRBT(node);
 }
 
-template <typename T> void RBT<T>::deleteNode(std::shared_ptr<RBTNode<T>> node)
+template <typename T> bool RBT<T>::deleteNode(T data)
 {
+    std::shared_ptr<RBTNode<T>> node = root;
+    while(node->data != data)
+    {
+        node = node->data > data ? node->lChild : node->rChild;
+        if (node == RBTNode<T>::nil) return false;
+    }
+
     std::shared_ptr<RBTNode<T>> p = node->parent;
-    if (!node->lChild && !node->rChild)
+    if(node->color == false)
     {
-        if (node->data < p->data)
+        if ( node->lChild == RBTNode<T>::nil && node->rChild == RBTNode<T>::nil)
         {
-            p->lChild = NULL;
+            if (data < p->data)
+            {
+                p->lChild = RBTNode<T>::nil;
+            }
+            else
+                p->rChild = RBTNode<T>::nil;
+
+            return true;
         }
+        else if ((node->lChild == RBTNode<T>::nil) != (node->rChild == RBTNode<T>::nil))
+        {
+            std::shared_ptr<RBTNode<T>> next = (node->lChild == RBTNode<T>::nil) ? node->rChild : node->lChild;
+            if (p == RBTNode<T>::nil)
+            {
+                root = next;
+                next->parent = RBTNode<T>::nil;
+                return true;
+            }
+            next->parent = p;
+            if (node == p->lChild)
+            {
+                p->lChild = next;
+            }
+            else
+                p->rChild = next;
+
+            return true;
+        }
+
         else
-            p->rChild = NULL;
-
-
-    }
-    else if (node->lChild && !node->rChild)
-    {
-        if (p == NULL)
         {
-            root = node->lChild;
-            node->parent = NULL;
-
-            return;
+            std::shared_ptr<RBTNode<T>> temp = node->rChild;
+            while (temp->lChild != RBTNode<T>::nil)
+            {
+                temp = temp -> lChild;
+            }
+            T tempData = temp->data;
+            this->deleteNode(temp->data);
+            root->data = temp->data;
+            return true;
         }
-        node->lChild->parent = p;
-        if (node == p->lChild)
-        {
-            p->lChild = node->lChild;
-        }
-        else
-            p->rChild = node->lChild;
-
-        return;
-    }
-    else if (node->rChild && !node->lChild)
-    {
-        if (p == NULL)
-        {
-            root = node->rChild;
-            node->parent = NULL;
-
-            return;
-        }
-        node->rChild->parent = p;
-        if (node == p->rChild)
-        {
-            p->rChild = node->rChild;
-        }
-        else
-            p->lChild = node->rChild;
-
-        return;
     }
     else
     {
-        if (p == NULL)
+        if ( node->lChild == RBTNode<T>::nil && node->rChild == RBTNode<T>::nil)
         {
-            std::shared_ptr<RBTNode<T>> temp = node->lChild;
-            while (temp->rChild)
+            if (data < p->data)
             {
-                temp = temp -> rChild;
+                p->lChild = RBTNode<T>::nil;
             }
-            root = temp;
-            temp->parent->rChild = temp->lChild;
-            temp->parent = p;
-            if (temp->lChild)
+            else
+                p->rChild = RBTNode<T>::nil;
+            return true;
+        }
+        else if ((node->lChild == RBTNode<T>::nil) != (node->rChild == RBTNode<T>::nil))
+        {
+            std::shared_ptr<RBTNode<T>> next = (node->lChild == RBTNode<T>::nil) ? node->rChild : node->lChild;
+            next->parent = p;
+            if (node == p->lChild)
             {
-                temp->lChild->parent = temp->parent;
+                p->lChild = next;
             }
-            temp->lChild = node->lChild;
-            temp->rChild = node->rChild;
-            return;
+            else
+                p->rChild = next;
+
+            return true;
         }
-        std::shared_ptr<RBTNode<T>> temp = node->lChild;
-        while (temp->rChild)
+
+        else
         {
-            temp = temp -> rChild;
+            std::shared_ptr<RBTNode<T>> temp = node->rChild;
+            while (temp->lChild != RBTNode<T>::nil)
+            {
+                temp = temp -> lChild;
+            }
+            T tempData = temp->data;
+            this->deleteNode(temp->data);
+            root->data = temp->data;
+            return true;
         }
-        temp->parent->rChild = temp->lChild;
-        temp->parent = p;
-        if (temp->lChild)
-        {
-            temp->lChild->parent = temp->parent;
-        }
-        temp->lChild = node->lChild;
-        temp->rChild = node->rChild;
     }
 }
 
@@ -258,7 +271,7 @@ template <typename T> void RBT<T>::rightRotated(std::shared_ptr<RBTNode<T>> node
         node->lChild->rChild->parent = node;
     }
     
-	node->lChild = node->lChild->rChild;
+    node->lChild = node->lChild->rChild;
     node->parent->rChild = node;
 }
 
@@ -337,15 +350,15 @@ template <typename T> void RBT<T>::insertKeepRBT(std::shared_ptr<RBTNode<T>> nod
 
 template <typename T> void RBT<T>::inOrder(std::shared_ptr<RBTNode<T>> node)
 {
-	if(node == RBTNode<T>::nil) return;
+    if(node == RBTNode<T>::nil) return;
     inOrder(node->lChild);
     std::cout<<node->data<<" "<<node->getColor()<<std::endl;
- 	inOrder(node->rChild);
+    inOrder(node->rChild);
 }
 
 template <typename T> void RBT<T>::preOrder(std::shared_ptr<RBTNode<T>> node)
 {
-	if(node == RBTNode<T>::nil) return;
+    if(node == RBTNode<T>::nil) return;
     std::cout<<node->data<<" "<<node->getColor()<<std::endl;
     preOrder(node->lChild);
     preOrder(node->rChild);
