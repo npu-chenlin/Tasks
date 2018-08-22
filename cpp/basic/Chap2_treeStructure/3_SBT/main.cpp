@@ -4,6 +4,9 @@
 
 int main(int argc, char const *argv[])
 {
+    // FIXME: how to test the algorithm using recorded data
+    //         using file to test the algorithm, maybe some bugs can be found
+    
     SBT<int> tree(4);
 
     SBTNode<int> node1(1);

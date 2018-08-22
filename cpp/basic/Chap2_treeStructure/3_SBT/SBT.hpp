@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 
+// FIXME: it is better to avoid using namespace in header
 using std::cout;
 using std::endl;
 
@@ -60,7 +61,8 @@ public:
     }
 
     void inOrder(SBTNode<T>* node);
-    void insertNode(SBTNode<T>* node);
+    void insertNode(SBTNode<T>* node); // FIXME: the function can be change to 
+    void insertNode(const T& v);      //         will be better, user do not care the SBTNode class
     void deleteNode(SBTNode<T>* node);
     SBTNode<T>* getRoot() {return root;}
 
