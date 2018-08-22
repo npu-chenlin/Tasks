@@ -4,9 +4,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
-
-using std::cout;
-using std::endl;
+#include <memory>
 
 template <typename T> class SBT;
 
@@ -28,14 +26,14 @@ public:
 
     void setData(T newData) {data = newData;}
     T getData() {return data;}
-    SBTNode<T>* getLChild() {return lChild;}
-    SBTNode<T>* getRChild() {return rChild;}
-    SBTNode<T>* getParent() {return parent;}
+    std::shared_ptr<SBTNode<T>> getLChild() {return lChild;}
+    std::shared_ptr<SBTNode<T>> getRChild() {return rChild;}
+    std::shared_ptr<SBTNode<T>> getParent() {return parent;}
 
 private:
     friend class SBT<T>;
     T data;
-    SBTNode<T>* lChild, *rChild, *parent;
+    std::shared_ptr<SBTNode<T>> lChild, rChild, parent;
 };
 
 template <typename T> class SBT
@@ -43,42 +41,45 @@ template <typename T> class SBT
 public:
     SBT()
     {
-        root = new SBTNode<T>();
+        root = std::make_shared<SBTNode<T>>();
     }
     explicit SBT(T newData)
     {
-        root = new SBTNode<T>(newData);
+        root = std::make_shared<SBTNode<T>>(newData);
     }
     ~SBT()
     {
         if ( root )
         {
-            delete root;
             root = NULL;
         }
 
     }
 
-    void inOrder(SBTNode<T>* node);
-    void insertNode(SBTNode<T>* node);
-    void deleteNode(SBTNode<T>* node);
-    SBTNode<T>* getRoot() {return root;}
+    std::shared_ptr<SBTNode<T>> getRoot() {return root;}
+    void insertNode(std::shared_ptr<SBTNode<T>> node);
+    void deleteNode(std::shared_ptr<SBTNode<T>> node);
+
+    void inOrder(std::shared_ptr<SBTNode<T>> node);
+
+    void SBTTransPlant(std::shared_ptr<SBTNode<T> > be_replaced, std::shared_ptr<SBTNode<T> > replace);
+    void search();
 
 private:
-    SBTNode<T>* root;
+        std::shared_ptr<SBTNode<T>> root;
 };
 
-template <typename T> void SBT<T>::inOrder(SBTNode<T>* node)
+template <typename T> void SBT<T>::inOrder(std::shared_ptr<SBTNode<T>> node)
 {
     if (node != NULL)
     {
         inOrder(node->lChild);
-        cout << node->data << endl;
+        std::cout << node->data << std::endl;
         inOrder(node->rChild);
     }
 }
 
-template <typename T> void SBT<T>::insertNode(SBTNode<T>* node)
+template <typename T> void SBT<T>::insertNode(std::shared_ptr<SBTNode<T>> node)
 {
     if (root->data == 0)
     {
@@ -86,7 +87,7 @@ template <typename T> void SBT<T>::insertNode(SBTNode<T>* node)
         return;
     }
 
-    SBTNode<T>* cur, * temp = root;
+    std::shared_ptr<SBTNode<T>> cur, temp = root;
 
     while (temp != NULL)
     {
@@ -110,93 +111,57 @@ template <typename T> void SBT<T>::insertNode(SBTNode<T>* node)
         cur->rChild = node;
 }
 
-template <typename T> void SBT<T>::deleteNode(SBTNode<T>* node)
+template <typename T> std::shared_ptr<SBTNode<T>> SBTFindMinimum(std::shared_ptr<SBTNode<T>> node)
 {
-    SBTNode<T>* p = node->parent;
-    if (!node->lChild && !node->rChild)
+    while (node->getLChild() != NULL)node = node -> getLChild();
+    return node;
+}
+
+template <typename T> std::shared_ptr<SBTNode<T>> SBTFindMaximum(std::shared_ptr<SBTNode<T>> node)
+{
+    while (node->getRChild() != NULL)node = node -> rChild;
+    return node;
+}
+
+template <typename T> std::shared_ptr<SBTNode<T>> SBTFindSuccessor(std::shared_ptr<SBTNode<T>> node)
+{
+    if(node->rChild) return SBTFindMinimum(node->rChild);
+    while( node -> parent -> lChild != node)
     {
-        if (node->data < p->data)
-        {
-            p->lChild = NULL;
-        }
-        else
-            p->rChild = NULL;
-
-
+        node = node -> parent;
+        if(node = NULL) return node;
     }
-    else if (node->lChild && !node->rChild)
+    return node -> parent;
+}
+
+template <typename T> void SBT<T>::SBTTransPlant(std::shared_ptr<SBTNode<T>> be_replaced,std::shared_ptr<SBTNode<T>> replace)
+{
+
+    if (be_replaced->parent == NULL ) root = replace;
+    else if ( be_replaced->parent->lChild == be_replaced) replace->parent->lChild = replace;
+    else be_replaced->parent->rChild = replace;
+    if(replace != NULL)
+        replace->parent = be_replaced -> parent;
+}
+
+template <typename T> void SBT<T>::deleteNode(std::shared_ptr<SBTNode<T>> node)
+{
+    std::shared_ptr<SBTNode<T>> p = node->parent;
+
+    if (node->lChild == NULL)
     {
-        if (p == NULL)
-        {
-            root = node->lChild;
-            node->parent = NULL;
-
-            return;
-        }
-        node->lChild->parent = p;
-        if (node == p->lChild)
-        {
-            p->lChild = node->lChild;
-        }
-        else
-            p->rChild = node->lChild;
-
-        return;
+        SBTTransPlant(node,node->rChild);
     }
-    else if (node->rChild && !node->lChild)
+    else if (node->rChild == NULL)
     {
-        if (p == NULL)
-        {
-            root = node->rChild;
-            node->parent = NULL;
-
-            return;
-        }
-        node->rChild->parent = p;
-        if (node == p->rChild)
-        {
-            p->rChild = node->rChild;
-        }
-        else
-            p->lChild = node->rChild;
-
-        return;
+        SBTTransPlant(node,node->lChild);
     }
     else
     {
-        if (p == NULL)
-        {
-            SBTNode<T>* temp = node->lChild;
-            while (temp->rChild)
-            {
-                temp = temp -> rChild;
-            }
-            root = temp;
-            temp->parent->rChild = temp->lChild;
-            temp->parent = p;
-            if (temp->lChild)
-            {
-                temp->lChild->parent = temp->parent;
-            }
-            temp->lChild = node->lChild;
-            temp->rChild = node->rChild;
-            return;
-        }
-        SBTNode<T>* temp = node->lChild;
-        while (temp->rChild)
-        {
-            temp = temp -> rChild;
-        }
-        temp->parent->rChild = temp->lChild;
-        temp->parent = p;
-        if (temp->lChild)
-        {
-            temp->lChild->parent = temp->parent;
-        }
-        temp->lChild = node->lChild;
-        temp->rChild = node->rChild;
+        std::shared_ptr<SBTNode<T>> y = SBTFindMinimum(node->rChild);
+        node->data = y->data;
+        SBTTransPlant(y,y->rChild);
     }
-
 }
 
 #endif
