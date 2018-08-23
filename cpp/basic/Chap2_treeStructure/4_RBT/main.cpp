@@ -4,30 +4,38 @@
 
 using namespace std;
 
+/*
+ * 12 1 9 2 0 11 7 19 4 15 18 5 14 13 10 16 6 3 8 17
+ */
+
 int main(int argc, char const *argv[])
 {
-    RBT<int> tree(1);
+    RBT<int> tree(12);
 
-    shared_ptr<RBTNode<int>> node2(new RBTNode<int>(2));
-    shared_ptr<RBTNode<int>> node3(new RBTNode<int>(3));
-    shared_ptr<RBTNode<int>> node4(new RBTNode<int>(4));
-    shared_ptr<RBTNode<int>> node5(new RBTNode<int>(5));
-    shared_ptr<RBTNode<int>> node6(new RBTNode<int>(6));
-    shared_ptr<RBTNode<int>> node7(new RBTNode<int>(7));
-    shared_ptr<RBTNode<int>> node8(new RBTNode<int>(8));
-    shared_ptr<RBTNode<int>> node9(new RBTNode<int>(9));
-    shared_ptr<RBTNode<int>> node10(new RBTNode<int>(10));
+    tree.add(1);
+    tree.add(9);
+    tree.add(2);
+    tree.add(-1);
+    tree.add(11);
+    tree.add(7);
+    tree.add(19);
+    tree.add(4);
+    tree.add(15);
+    tree.add(18);
+    tree.add(5);
+    tree.add(14);
+    tree.add(13);
+    tree.add(10);
+    tree.add(16);
+    tree.add(6);
+    tree.add(3);
+    tree.add(8);
+    tree.add(17);
 
-    tree.insertNode(node2);
-    tree.insertNode(node3);
-    tree.insertNode(node4);
-    tree.insertNode(node5);
-    tree.insertNode(node6);
-    tree.insertNode(node7);
-    tree.insertNode(node8);
-    tree.insertNode(node9);
-    tree.insertNode(node10);
+    tree.del(12);
+    tree.del(1);
 
-    tree.preOrder(tree.getRoot());
+    tree.inOrder(tree.getRoot());
+
     return 0;
 }
