@@ -4,11 +4,6 @@
 #include <iostream>
 #include <list>
 #include <vector>
-
-// FIXME: it is better to avoid using namespace in header
-using std::cout;
-using std::endl;
-
 #include <memory>
 
 template <typename T> class SBT;
@@ -61,26 +56,38 @@ public:
 
     }
 
-<<<<<<< HEAD
-    void inOrder(SBTNode<T>* node);
-    void insertNode(SBTNode<T>* node); // FIXME: the function can be change to 
-    void insertNode(const T& v);      //         will be better, user do not care the SBTNode class
-    void deleteNode(SBTNode<T>* node);
-    SBTNode<T>* getRoot() {return root;}
-=======
     std::shared_ptr<SBTNode<T>> getRoot() {return root;}
+
+    void add(T newData);
+    void del(T Data);
     void insertNode(std::shared_ptr<SBTNode<T>> node);
     void deleteNode(std::shared_ptr<SBTNode<T>> node);
 
     void inOrder(std::shared_ptr<SBTNode<T>> node);
 
     void SBTTransPlant(std::shared_ptr<SBTNode<T> > be_replaced, std::shared_ptr<SBTNode<T> > replace);
-    void search();
->>>>>>> b49e028c63a53c07002eaaa2051f67b40f338a1f
 
 private:
         std::shared_ptr<SBTNode<T>> root;
 };
+
+template <typename T> std::shared_ptr<SBTNode<T>> SBTSearch(std::shared_ptr<SBTNode<T>> node , T data)
+{
+    if(data > node->getData()) return SBTSearch(node->getRChild(),data);
+    else if(data < node->getData()) return SBTSearch(node->getLChild(),data);
+    else return node;
+}
+
+template <typename T> void SBT<T>::add(T newData)
+{
+    std::shared_ptr<SBTNode<T>> p(new SBTNode<T>(newData));
+    insertNode(p);
+}
+
+template <typename T> void SBT<T>::del(T Data)
+{
+    deleteNode(SBTSearch(root,Data));
+}
 
 template <typename T> void SBT<T>::inOrder(std::shared_ptr<SBTNode<T>> node)
 {

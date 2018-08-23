@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "AVL.hpp"
+#include "SBT.hpp"
 
 using namespace std;
 
@@ -9,31 +9,16 @@ int main(int argc, char const *argv[])
     // FIXME: how to test the algorithm using recorded data
     //         using file to test the algorithm, maybe some bugs can be found
     
-    AVL<int> tree(4);
+    SBT<int> tree(4);
+    for(int i = 1;i<10;i++)
+    {
+        if(i!=4)
+        {tree.add(i);}
+    }
 
-    shared_ptr<AVLNode<int>> node1 = make_shared<AVLNode<int>>(1);
-    shared_ptr<AVLNode<int>> node2 = make_shared<AVLNode<int>>(2);
-    shared_ptr<AVLNode<int>> node3 = make_shared<AVLNode<int>>(3);
-    shared_ptr<AVLNode<int>> node5 = make_shared<AVLNode<int>>(5);
-    shared_ptr<AVLNode<int>> node6 = make_shared<AVLNode<int>>(6);
-    shared_ptr<AVLNode<int>> node7 = make_shared<AVLNode<int>>(7);
-    shared_ptr<AVLNode<int>> node8 = make_shared<AVLNode<int>>(8);
-    shared_ptr<AVLNode<int>> node9 = make_shared<AVLNode<int>>(9);
-    shared_ptr<AVLNode<int>> node10 = make_shared<AVLNode<int>>(10);
-
-    tree.insertNode(node3);
-    tree.insertNode(node1);
-    tree.insertNode(node2);
-    tree.insertNode(node5);
-    tree.insertNode(node6);
-    tree.insertNode(node7);
-    tree.insertNode(node8);
-    tree.insertNode(node9);
-    tree.insertNode(node10);
-
-    tree.deleteNode(tree.getRoot());
-    tree.deleteNode(node64);
+    tree.del(4);
+    tree.del(3);
     tree.inOrder(tree.getRoot());
- 
+
     return 0;
 }
