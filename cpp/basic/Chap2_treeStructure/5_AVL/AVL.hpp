@@ -63,6 +63,8 @@ public:
     }
 
     std::shared_ptr<AVLNode<T>> getRoot() {return root;}
+    void add(T newData);
+    void del(T Data);
     void insertNode(std::shared_ptr<AVLNode<T>> node);
     void deleteNode(std::shared_ptr<AVLNode<T>> node);
 
@@ -81,6 +83,19 @@ public:
 private:
         std::shared_ptr<AVLNode<T>> root;
 };
+
+template <typename T> int getBlanceFactor(std::shared_ptr<AVLNode<T>> node)
+{
+    return node->getRChild()->getH()-node->getLChild()->getH();
+}
+
+template <typename T> std::shared_ptr<AVLNode<T>> AVLSearch(std::shared_ptr<AVLNode<T>> node , T data)
+{
+    if(data > node->getData()) return AVLSearch(node->getRChild(),data);
+    else if(data < node->getData()) return AVLSearch(node->getLChild(),data);
+    else return node;
+}
+
 template <typename T> std::shared_ptr<AVLNode<T>> AVLFindMinimum(std::shared_ptr<AVLNode<T>> node)
 {
     while (node->getLChild() != AVLNode<T>::nil)node = node -> getLChild();
@@ -107,6 +122,17 @@ template <typename T> std::shared_ptr<AVLNode<T>> AVLFindSuccessor(std::shared_p
 template <typename T> void AVLRefreshHeight(std::shared_ptr<AVLNode<T>> node)
 {
     node->setH(std::max(node->getLChild()->getH(),node->getRChild()->getH()) + 1);
+}
+
+template <typename T> void AVL<T>::add(T newData)
+{
+    std::shared_ptr<AVLNode<T>> p(new AVLNode<T>(newData));
+    insertNode(p);
+}
+
+template <typename T> void AVL<T>::del(T Data)
+{
+    deleteNode(AVLSearch(root,Data));
 }
 
 template <typename T> void AVL<T>::inOrder(std::shared_ptr<AVLNode<T>> node)
@@ -311,7 +337,40 @@ template <typename T> void AVL<T>::insertKeepAVL(std::shared_ptr<AVLNode<T>> nod
 
 template <typename T> void AVL<T>::deleteKeepAVL(std::shared_ptr<AVLNode<T>> node)
 {
-
+    if(std::abs(getBlanceFactor(node)) == 0)
+    {
+        while (node != AVLNode<T>::nil)
+        {
+            node = node ->parent;
+            if((std::abs(getBlanceFactor(node))) == 2)
+            {
+                deleteKeepAVL(node);
+                break;
+            }
+        }
+    }
+    else if(getBlanceFactor(node) == 2) //Means deleted node is at left
+    {
+        if(getBlanceFactor(node->rChild) == 0 || getBlanceFactor(node->rChild) == -1)
+        {
+            leftRotated(node);
+        }
+        else if(getBlanceFactor(node->rChild) == 1)
+        {
+            leftRightRotated(node);
+        }
+    }
+    else if(getBlanceFactor(node) == -2)//deleted node is at right
+    {
+        if(getBlanceFactor(node->lChild) == 0 || getBlanceFactor(node->lChild) == 1)
+        {
+            rightRotated(node);
+        }
+        else if(getBlanceFactor(node->rChild) == 1)
+        {
+            rightLeftRotated(node);
+        }
+    }
 }
 
 #endif
