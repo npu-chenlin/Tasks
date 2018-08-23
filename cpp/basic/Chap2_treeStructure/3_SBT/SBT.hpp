@@ -4,6 +4,11 @@
 #include <iostream>
 #include <list>
 #include <vector>
+
+// FIXME: it is better to avoid using namespace in header
+using std::cout;
+using std::endl;
+
 #include <memory>
 
 template <typename T> class SBT;
@@ -56,6 +61,13 @@ public:
 
     }
 
+<<<<<<< HEAD
+    void inOrder(SBTNode<T>* node);
+    void insertNode(SBTNode<T>* node); // FIXME: the function can be change to 
+    void insertNode(const T& v);      //         will be better, user do not care the SBTNode class
+    void deleteNode(SBTNode<T>* node);
+    SBTNode<T>* getRoot() {return root;}
+=======
     std::shared_ptr<SBTNode<T>> getRoot() {return root;}
     void insertNode(std::shared_ptr<SBTNode<T>> node);
     void deleteNode(std::shared_ptr<SBTNode<T>> node);
@@ -64,6 +76,7 @@ public:
 
     void SBTTransPlant(std::shared_ptr<SBTNode<T> > be_replaced, std::shared_ptr<SBTNode<T> > replace);
     void search();
+>>>>>>> b49e028c63a53c07002eaaa2051f67b40f338a1f
 
 private:
         std::shared_ptr<SBTNode<T>> root;

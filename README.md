@@ -11,6 +11,9 @@ This is Chenlin's programmig practice fold for summer holiday study
 
 ## 深度思考
 
+* 2018-08-22
+  * [ ] gobang的代码是写出来，但是有很多可以改进的地方。1） 将算法和GUI分离，通过传递board对象给GUI来实现棋盘的显示，用户的输入。2）设计策略类，能够实现多种策略
+
 * 2018-08-13
   * [x] 如何使用CMake能够一次将所有的C++程序都编译完？
   * [ ] 在学习CMake基础用法的基础上，可以琢磨一下如何结构化、模块化编程。

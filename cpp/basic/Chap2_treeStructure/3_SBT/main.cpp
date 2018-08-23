@@ -6,6 +6,9 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
+    // FIXME: how to test the algorithm using recorded data
+    //         using file to test the algorithm, maybe some bugs can be found
+    
     AVL<int> tree(4);
 
     shared_ptr<AVLNode<int>> node1 = make_shared<AVLNode<int>>(1);
