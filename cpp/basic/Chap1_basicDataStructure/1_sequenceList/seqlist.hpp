@@ -19,7 +19,9 @@ public:
 		delete[] element;
 	}
 
-	bool insertElement(T newData);
+	bool insertElement(T newData);      // FIXME: change the function to be: 
+                                        //      bool insertElement(T& newData)
+                                        // will be better
 	bool deleteElement(int loc);
 	T getElement(int loc);
 	bool changeElement(int loc , T newData);

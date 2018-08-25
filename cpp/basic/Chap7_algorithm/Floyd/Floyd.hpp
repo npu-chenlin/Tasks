@@ -34,8 +34,8 @@ public:
 private:
     std::vector< std::vector<int> > d;
     std::vector< std::vector<int> > p;
-    int v;
-    int e;
+    int v;                                  // FIXME: change 'v' to 'v_n' is better
+    int e;                                  // FIXME: change 'e' to 'e_n' is better
     std::list<int> path;
     int Gtype;
     bool isDone;
@@ -131,6 +131,11 @@ void Floyd::printMinPath(int i, int j)
 
 }
 
+// FIXME: change the function to 
+//  void Floyd::findPath(std::list<int>& path, int i, int j)
+// 
+// Therefore, the class member 'path' can be avoid. Because the 'path' just
+// querying results, therefore, it is not necessary to be class member
 void Floyd::findPath(int i, int j)
 {
     path.push_back(i);
@@ -156,4 +161,6 @@ void Floyd::printP()
         }
     }
 }
-#endif//end of _FLOYD_H
+
+#endif //end of _FLOYD_H
+

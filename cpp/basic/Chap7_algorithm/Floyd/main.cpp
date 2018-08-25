@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
     g.addE(2,4,4);
     g.addE(3,4,2);
     g.addE(3,5,3);
-    cout<<"距离矩阵"<<endl;
+    cout<<"距离矩阵"<<endl;                     // FIXME: it is better to use English in the program
     g.printM();
 
     cout<<endl;

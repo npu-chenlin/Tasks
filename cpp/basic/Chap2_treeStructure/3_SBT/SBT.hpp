@@ -6,6 +6,11 @@
 #include <vector>
 #include <memory>
 
+
+// FIXME: 'std::shared_ptr<SBTNode<T>>' is too long, how about define a macro, 
+//         to reduce the code length and make the code clear to read
+#define pSBTNode std::shared_ptr<SBTNode<T> >
+
 template <typename T> class SBT;
 
 template <typename T> class SBTNode
@@ -13,7 +18,7 @@ template <typename T> class SBTNode
 public:
     SBTNode()
     {
-        data   = 0;
+        data   = 0;         // FIXME: if 'T' is not int, then this will be failed
         lChild = rChild = parent = NULL;
     }
     explicit SBTNode(T newData)
@@ -26,14 +31,14 @@ public:
 
     void setData(T newData) {data = newData;}
     T getData() {return data;}
-    std::shared_ptr<SBTNode<T>> getLChild() {return lChild;}
-    std::shared_ptr<SBTNode<T>> getRChild() {return rChild;}
-    std::shared_ptr<SBTNode<T>> getParent() {return parent;}
+    pSBTNode getLChild() {return lChild;}
+    pSBTNode getRChild() {return rChild;}
+    pSBTNode getParent() {return parent;}
 
 private:
     friend class SBT<T>;
     T data;
-    std::shared_ptr<SBTNode<T>> lChild, rChild, parent;
+    pSBTNode lChild, rChild, parent;
 };
 
 template <typename T> class SBT
@@ -41,11 +46,11 @@ template <typename T> class SBT
 public:
     SBT()
     {
-        root = std::make_shared<SBTNode<T>>();
+        root = pSBTNode(NULL);
     }
     explicit SBT(T newData)
     {
-        root = std::make_shared<SBTNode<T>>(newData);
+        root = pSBTNode(new SBTNode<T>(newData));
     }
     ~SBT()
     {
@@ -53,25 +58,24 @@ public:
         {
             root = NULL;
         }
-
     }
 
-    std::shared_ptr<SBTNode<T>> getRoot() {return root;}
+    pSBTNode getRoot() {return root;}
 
     void add(T newData);
     void del(T Data);
-    void insertNode(std::shared_ptr<SBTNode<T>> node);
-    void deleteNode(std::shared_ptr<SBTNode<T>> node);
+    void insertNode(pSBTNode node);
+    void deleteNode(pSBTNode node);
 
-    void inOrder(std::shared_ptr<SBTNode<T>> node);
+    void inOrder(pSBTNode node);
 
-    void SBTTransPlant(std::shared_ptr<SBTNode<T> > be_replaced, std::shared_ptr<SBTNode<T> > replace);
+    void SBTTransPlant(pSBTNode be_replaced, pSBTNode replace);
 
 private:
-        std::shared_ptr<SBTNode<T>> root;
+        pSBTNode root;
 };
 
-template <typename T> std::shared_ptr<SBTNode<T>> SBTSearch(std::shared_ptr<SBTNode<T>> node , T data)
+template <typename T> pSBTNode SBTSearch(pSBTNode node, T data)
 {
     if(data > node->getData()) return SBTSearch(node->getRChild(),data);
     else if(data < node->getData()) return SBTSearch(node->getLChild(),data);
@@ -80,7 +84,7 @@ template <typename T> std::shared_ptr<SBTNode<T>> SBTSearch(std::shared_ptr<SBTN
 
 template <typename T> void SBT<T>::add(T newData)
 {
-    std::shared_ptr<SBTNode<T>> p(new SBTNode<T>(newData));
+    pSBTNode p(new SBTNode<T>(newData));
     insertNode(p);
 }
 
@@ -89,7 +93,7 @@ template <typename T> void SBT<T>::del(T Data)
     deleteNode(SBTSearch(root,Data));
 }
 
-template <typename T> void SBT<T>::inOrder(std::shared_ptr<SBTNode<T>> node)
+template <typename T> void SBT<T>::inOrder(pSBTNode node)
 {
     if (node != NULL)
     {
@@ -99,7 +103,7 @@ template <typename T> void SBT<T>::inOrder(std::shared_ptr<SBTNode<T>> node)
     }
 }
 
-template <typename T> void SBT<T>::insertNode(std::shared_ptr<SBTNode<T>> node)
+template <typename T> void SBT<T>::insertNode(pSBTNode node)
 {
     if (root->data == 0)
     {
@@ -107,7 +111,7 @@ template <typename T> void SBT<T>::insertNode(std::shared_ptr<SBTNode<T>> node)
         return;
     }
 
-    std::shared_ptr<SBTNode<T>> cur, temp = root;
+    pSBTNode cur, temp = root;
 
     while (temp != NULL)
     {
@@ -131,19 +135,19 @@ template <typename T> void SBT<T>::insertNode(std::shared_ptr<SBTNode<T>> node)
         cur->rChild = node;
 }
 
-template <typename T> std::shared_ptr<SBTNode<T>> SBTFindMinimum(std::shared_ptr<SBTNode<T>> node)
+template <typename T> pSBTNode SBTFindMinimum(pSBTNode node)
 {
     while (node->getLChild() != NULL)node = node -> getLChild();
     return node;
 }
 
-template <typename T> std::shared_ptr<SBTNode<T>> SBTFindMaximum(std::shared_ptr<SBTNode<T>> node)
+template <typename T> pSBTNode SBTFindMaximum(pSBTNode node)
 {
     while (node->getRChild() != NULL)node = node -> rChild;
     return node;
 }
 
-template <typename T> std::shared_ptr<SBTNode<T>> SBTFindSuccessor(std::shared_ptr<SBTNode<T>> node)
+template <typename T> pSBTNode SBTFindSuccessor(pSBTNode node)
 {
     if(node->rChild) return SBTFindMinimum(node->rChild);
     while( node -> parent -> lChild != node)
@@ -154,7 +158,7 @@ template <typename T> std::shared_ptr<SBTNode<T>> SBTFindSuccessor(std::shared_p
     return node -> parent;
 }
 
-template <typename T> void SBT<T>::SBTTransPlant(std::shared_ptr<SBTNode<T>> be_replaced,std::shared_ptr<SBTNode<T>> replace)
+template <typename T> void SBT<T>::SBTTransPlant(pSBTNode be_replaced,pSBTNode replace)
 {
 
     if (be_replaced->parent == NULL ) root = replace;
@@ -164,9 +168,9 @@ template <typename T> void SBT<T>::SBTTransPlant(std::shared_ptr<SBTNode<T>> be_
         replace->parent = be_replaced -> parent;
 }
 
-template <typename T> void SBT<T>::deleteNode(std::shared_ptr<SBTNode<T>> node)
+template <typename T> void SBT<T>::deleteNode(pSBTNode node)
 {
-    std::shared_ptr<SBTNode<T>> p = node->parent;
+    pSBTNode p = node->parent;
 
     if (node->lChild == NULL)
     {
@@ -178,10 +182,11 @@ template <typename T> void SBT<T>::deleteNode(std::shared_ptr<SBTNode<T>> node)
     }
     else
     {
-        std::shared_ptr<SBTNode<T>> y = SBTFindMinimum(node->rChild);
+        pSBTNode y = SBTFindMinimum(node->rChild);
         node->data = y->data;
         SBTTransPlant(y,y->rChild);
     }
 }
 
 #endif
+

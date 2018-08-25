@@ -1,3 +1,7 @@
+#ifndef __KMP_HPP__
+#define __KMP_HPP__
+
+
 #include <vector>
 
 template <typename T> std::vector<int> getNext(std::vector<T> p)
@@ -38,3 +42,6 @@ template <typename T> int KMP(std::vector<T> string , std::vector<T> pattern)
 	else
 		return -1;
 }
+
+#endif // end of __KMP_HPP__
+
