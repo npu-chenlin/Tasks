@@ -42,10 +42,8 @@ public:
 		delete head;
 	}
 
-	// FIXME: the argument change to (int i, const T& newData) will be better
-	// 		same tips can be applied to following functions
-	bool insertNode(int i , T newData);
-	bool insertNode(T newData);
+    bool insertNode(int i , const T& newData);
+    bool insertNode(const T& newData);
 
 	bool removeNode(ListNode<T>* q);
 	void removeNode(int n);
@@ -54,13 +52,13 @@ public:
 	int getLength();
 	ListNode<T>* findNode(T q);
 
-	void printLink(); // FIXME: the function name is not good, 'print' will be better
+    void printLink();
 
 private:
 	ListNode<T>* head;
 };
 
-template <typename T> bool LinkList<T>::insertNode(int loc, T newData)
+template <typename T> bool LinkList<T>::insertNode(int loc, const T &newData)
 {
 	ListNode<T>* p = head;
 	int j;
@@ -79,7 +77,7 @@ template <typename T> bool LinkList<T>::insertNode(int loc, T newData)
 	return true;
 }
 
-template <typename T> bool LinkList<T>::insertNode(T newData)
+template <typename T> bool LinkList<T>::insertNode(const T &newData)
 {
 	ListNode<T>* p = head;
 	int j;

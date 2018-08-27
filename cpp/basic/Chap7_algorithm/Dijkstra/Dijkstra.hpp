@@ -12,7 +12,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-#define MAX_DISTANCE INT_MAX/2                // FIXME: if the user input distance exceed 999, how?
+#define MAX_DISTANCE INT_MAX/2
 
 struct Dis
 {
