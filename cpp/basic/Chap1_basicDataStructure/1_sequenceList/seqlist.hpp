@@ -19,9 +19,7 @@ public:
 		delete[] element;
 	}
 
-	bool insertElement(T newData);      // FIXME: change the function to be: 
-                                        //      bool insertElement(T& newData)
-                                        // will be better
+	bool insertElement(T& newData);
 	bool deleteElement(int loc);
 	T getElement(int loc);
 	bool changeElement(int loc , T newData);
@@ -34,7 +32,7 @@ private:
 	int length;
 };
 
-template <typename T, int defaultSize> bool seqList<T,defaultSize>::insertElement(T newElement)
+template <typename T, int defaultSize> bool seqList<T,defaultSize>::insertElement(T& newElement)
 {
 	if (length >= maxSize) return false;
 	else

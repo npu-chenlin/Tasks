@@ -4,12 +4,18 @@
 
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent): QWidget(parent)
+MainWindow::MainWindow(QWidget *parent):
+  QMainWindow(parent),
+  ui(new Ui::MainWindow)
 {
-    memset(m, 0, sizeof(m));
-}
 
-MainWindow::~MainWindow(){}
+  ui->setupUi(this);
+
+}
+MainWindow::~MainWindow()
+{
+  delete ui;
+}
 
 void MainWindow::paintEvent(QPaintEvent *)
 {
@@ -68,7 +74,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                 flag = true;
                 ++steps;
                 m[i][j] = 1;
-                if (isWin(i, j))
+                if (computer.isWin(i, j))
                 {
                     if (m[i][j] == 1)
                     {
@@ -80,7 +86,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                     update();
                     break;
                 }
-                Point p = dropChessman(false);
+                Point p = computer.dropChessman(false);
 
                 m[p.x][p.y] = -1;
                 update();
@@ -100,297 +106,4 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
             }
         }
     }
-}
-
-bool MainWindow::isWin(int x0, int y0)
-{
-    int forword = 0;
-    int post = 0;
-    while (m[x0 - post][y0] == m[x0][y0])
-    {
-        if (x0 - (++post) < 0) break;
-    }
-    while (m[x0 + forword][y0] == m[x0][y0])
-    {
-        if (x0 + (++forword) > SIZE - 1)break;
-    }
-    if (post + forword >= 6)return true;
-
-    forword = post = 0;
-    while (m[x0][y0 - post] == m[x0][y0])
-    {
-        if (y0 - (++post) < 0) break;
-    }
-    while (m[x0][y0 + forword] == m[x0][y0])
-    {
-        if (y0 + (++forword) > SIZE - 1)break;
-    }
-    if (post + forword >= 6)return true;
-
-    forword = post = 0;
-    while (m[x0 - post][y0 - post] == m[x0][y0])
-    {
-        if ((y0 - (++post) < 0) && (x0 - post < 0)) break;
-    }
-    while (m[x0 + forword][y0 + forword] == m[x0][y0])
-    {
-        if ((x0 + (++forword) > SIZE - 1) && ((y0 + forword) > SIZE - 1))break;
-
-    }
-    if (post + forword >= 6)return true;
-
-    forword = post = 0;
-    while (m[x0 - post][y0 + post] == m[x0][y0])
-    {
-        if ((x0 - (++post) < 0) && (y0 + post > SIZE - 1)) break;
-    }
-    while (m[x0 + forword][y0 - forword] == m[x0][y0])
-    {
-        if ((x0 + (++forword) > SIZE - 1) && ((y0 - forword) < 0))break;
-    }
-    if (post + forword >= 6)return true;
-
-    return false;
-}
-void MainWindow::thinker(bool player)
-{
-    Point t1 = dropChessman(player);
-    if(player)m[t1.x][t1.y] = 1;
-    else m[t1.x][t1.y] = -1;
-    Point t2 = dropChessman(!player);
-    if(player)m[t2.x][t2.y] = 1;
-    else m[t2.x][t2.y] = -1;
-}
-
-Point MainWindow::dropChessman(bool player)
-{
-    Point p;
-    Point p1,p2;
-    int attackScore = 0;
-    int defenceScore = 0;
-    for (int i = 0; i < SIZE - 1; ++i)
-    {
-        for (int j = 0; j < SIZE - 1; ++j)
-        {
-            if (m[i][j]) continue;
-            p = evaluater(i , j , player);
-            if (p.score > attackScore)
-            {
-                attackScore = p.score;
-                p1 = p;
-            }
-        }
-    }
-    for (int i = 0; i < SIZE - 1; ++i)
-    {
-        for (int j = 0; j < SIZE - 1; ++j)
-        {
-            if (m[i][j]) continue;
-            p = evaluater(i , j , !player);
-            if (p.score > defenceScore)
-            {
-                defenceScore = p.score;
-                p2 = p;
-            }
-        }
-    }
-    attackScore+=2;
-    if (attackScore > defenceScore) return p1;
-    else return p2;
-}
-
-void calculateScore(Point& p)
-{
-    p.score = 0;
-    for (int i = 0; i < 4; ++i)
-    {
-        if (p.dir[i].Num+p.dir[i+4].Num >= 4)p.score +=100000;
-        else if (p.dir[i].Num+p.dir[i+4].Num == 3 && p.dir[i].isEmpty == true && p.dir[i+4].isEmpty == true) p.score +=6000;
-        else if (p.dir[i].Num+p.dir[i+4].Num == 3 && p.dir[i].isEmpty != p.dir[i+4].isEmpty) p.score +=2000;
-        else if (p.dir[i].Num+p.dir[i+4].Num == 2 && p.dir[i].isEmpty == true && p.dir[i+4].isEmpty == true) p.score +=2500;
-        else if (p.dir[i].Num+p.dir[i+4].Num == 2 && p.dir[i].isEmpty != p.dir[i+4].isEmpty) p.score +=1500;
-        else if (p.dir[i].Num+p.dir[i+4].Num == 1 && p.dir[i].isEmpty == true && p.dir[i+4].isEmpty == true) p.score +=1500;
-        else if (p.dir[i].Num+p.dir[i+4].Num == 1 && p.dir[i].isEmpty != p.dir[i+4].isEmpty) p.score +=500;
-        else if (p.dir[i].Num+p.dir[i+4].Num == 0 && p.dir[i].isEmpty == true && p.dir[i+4].isEmpty == true) p.score +=200;
-        else if (p.dir[i].Num+p.dir[i+4].Num == 0 && p.dir[i].isEmpty != p.dir[i+4].isEmpty) p.score +=20;
-    }
-}
-
-int getChessmanColor(bool player)
-{
-    if(player) return 1;
-    else return -1;
-}
-
-Point MainWindow::evaluater(int x0, int y0 , bool player)
-{
-    int forword = 0;
-    int post = 0;
-    Point p;
-
-    m[x0][y0] = getChessmanColor(player);
-    p.x = x0;
-    p.y = y0;
-    while (1)
-    {
-        if (x0 - (++post) < 0)
-        {
-            p.dir[4].isEmpty = false;
-            break;
-        }
-        if(m[x0 - post][y0] == getChessmanColor(!player))
-        {
-            p.dir[4].isEmpty = false;
-            break;
-        }
-        if(m[x0 - post][y0] == 0)
-        {
-            p.dir[4].isEmpty = true;
-            break;
-        }
-    }
-    while (1)
-    {
-        if (x0 + (++forword) > SIZE - 2)
-        {
-            p.dir[0].isEmpty = false;
-            break;
-        }
-        if(m[x0 + forword][y0] == getChessmanColor(!player))
-        {
-            p.dir[0].isEmpty = false;
-            break;
-        }
-        if(m[x0 + forword][y0] == 0)
-        {
-            p.dir[0].isEmpty = true;
-            break;
-        }
-    }
-    p.dir[4].Num = post - 1;
-    p.dir[0].Num = forword -1;
-
-    forword = post = 0;
-    while (1)
-    {
-        if (y0 - (++post) < 0)
-        {
-            p.dir[6].isEmpty = false;
-            break;
-        }
-        if(m[x0][y0 - post] == getChessmanColor(!player))
-        {
-            p.dir[6].isEmpty = false;
-            break;
-        }
-        if(m[x0][y0 - post] == 0)
-        {
-            p.dir[6].isEmpty = true;
-            break;
-        }
-    }
-    while (1)
-    {
-        if (y0 + (++forword) > SIZE - 2)
-        {
-            p.dir[2].isEmpty = false;
-            break;
-        }
-        if(m[x0][y0 + forword] == getChessmanColor(!player))
-        {
-            p.dir[2].isEmpty = false;
-            break;
-        }
-        if(m[x0][y0 + forword] == 0)
-        {
-            p.dir[2].isEmpty = true;
-            break;
-        }
-    }
-    p.dir[6].Num = post - 1;
-    p.dir[2].Num = forword -1;
-
-    forword = post = 0;
-    while (1)
-    {
-        if ((y0 - (++post) < 0) || (x0 - post < 0))
-        {
-            p.dir[5].isEmpty = false;
-            break;
-        }
-        if(m[x0 - post][y0 - post] == getChessmanColor(!player))
-        {
-            p.dir[5].isEmpty = false;
-            break;
-        }
-        if(m[x0 - post][y0 - post] == 0)
-        {
-            p.dir[5].isEmpty = true;
-            break;
-        }
-    }
-    while (1)
-    {
-        if ((x0 + (++forword) > SIZE - 2) || ((y0 + forword) > SIZE - 2))
-        {
-            p.dir[1].isEmpty = false;
-            break;
-        }
-        if(m[x0 + forword][y0 + forword] == getChessmanColor(!player))
-        {
-            p.dir[1].isEmpty = false;
-            break;
-        }
-        if(m[x0 + forword][y0 + forword] == 0)
-        {
-            p.dir[1].isEmpty = true;
-            break;
-        }
-    }
-    p.dir[5].Num = post - 1;
-    p.dir[1].Num = forword -1;
-
-    forword = post = 0;
-    while (1)
-    {
-        if ((x0 - (++post) < 0) || (y0 + post > SIZE - 2))
-        {
-            p.dir[3].isEmpty = false;
-            break;
-        }
-        if(m[x0 - post][y0 + post] == getChessmanColor(!player))
-        {
-            p.dir[3].isEmpty = false;
-            break;
-        }
-        if(m[x0 - post][y0 + post] == 0)
-        {
-            p.dir[3].isEmpty = true;
-            break;
-        }
-    }
-    while (1)
-    {
-        if ((x0 + (++forword) > SIZE - 2) || ((y0 - forword) < 0))
-        {
-            p.dir[7].isEmpty = false;
-            break;
-        }
-        if(m[x0 + forword][y0 - forword] == getChessmanColor(!player))
-        {
-            p.dir[7].isEmpty = false;
-            break;
-        }
-        if(m[x0 + forword][y0 - forword] == 0)
-        {
-            p.dir[7].isEmpty = true;
-            break;
-        }
-    }
-    p.dir[3].Num = post - 1;
-    p.dir[7].Num = forword -1;
-
-    calculateScore(p);
-    m[x0][y0] = 0;
-    return p;
 }

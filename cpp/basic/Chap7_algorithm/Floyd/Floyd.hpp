@@ -28,41 +28,40 @@ public:
     void minPath();
     void minPath(int i , int j);  //i,j最短距
 
-    void printMinPath(int i , int j);//i,j行程
-    void findPath(int i , int j);
+    void printMinPath(std::list<int>& path,int i , int j);//i,j行程
+    void findPath(std::list<int>& path,int i , int j);
 
 private:
     std::vector< std::vector<int> > d;
     std::vector< std::vector<int> > p;
-    int v;                                  // FIXME: change 'v' to 'v_n' is better
-    int e;                                  // FIXME: change 'e' to 'e_n' is better
-    std::list<int> path;
+    int v_n;
+    int e_n;
     int Gtype;
     bool isDone;
 };
 
 Floyd::Floyd(int vertex, int type)
 {
-    v = vertex;
+    v_n = vertex;
     isDone = false;
 
-    d.resize(v);
-    p.resize(v);
-    for (int i = 0; i < v; ++i)
+    d.resize(v_n);
+    p.resize(v_n);
+    for (int i = 0; i < v_n; ++i)
     {
-        d[i].resize(v, MAX_DISTANCE);
-        p[i].resize(v);
-        for (int j = 0; j < v; ++j)
+        d[i].resize(v_n, MAX_DISTANCE);
+        p[i].resize(v_n);
+        for (int j = 0; j < v_n; ++j)
         {
             p[i][j] = j;
         }
     }
-    for (int i = 0; i < v; ++i)
+    for (int i = 0; i < v_n; ++i)
     {
         d[i][i] = 0;
     }
 
-    e = 0;
+    e_n = 0;
     Gtype = type;
 }
 
@@ -70,23 +69,23 @@ void Floyd::addE(int i, int j, int w)
 {
     d[i][j] = w;
     d[j][i] = w;
-    e++;
+    e_n++;
 }
 
 void Floyd::delE(int i , int j)
 {
     d[i][j] = MAX_DISTANCE;
     d[j][i] = MAX_DISTANCE;
-    e--;
+    e_n--;
 }
 
 void Floyd::printM()
 {
-    for (int i = 0; i < v; ++i)
+    for (int i = 0; i < v_n; ++i)
     {
-        for (int j = 0; j < v; ++j)
+        for (int j = 0; j < v_n; ++j)
         {
-            if (j == v - 1)
+            if (j == v_n - 1)
             {
                 cout << d[i][j] << endl;
             }
@@ -97,11 +96,11 @@ void Floyd::printM()
 
 void Floyd::minPath()
 {
-    for (int i = 0; i < v; ++i)
+    for (int i = 0; i < v_n; ++i)
     {
-        for (int j = 0; j < v; ++j)
+        for (int j = 0; j < v_n; ++j)
         {
-            for (int k = 0; k < v; ++k)
+            for (int k = 0; k < v_n; ++k)
             {
                 if (d[i][k] + d[k][j] < d[i][j])
                 {
@@ -119,24 +118,17 @@ void Floyd::minPath(int i, int j)
     cout << d[i][j] << endl;
 }
 
-void Floyd::printMinPath(int i, int j)
+void Floyd::printMinPath(std::list<int>& path,int i, int j)
 {
     if (!isDone) { minPath();}
-    path.clear();
-    findPath(i, j);
+    findPath(path,i, j);
     for (list<int>::iterator ptr = path.begin(); ptr != path.end(); ++ptr)
     {
         cout << *ptr << endl;
     }
-
 }
 
-// FIXME: change the function to 
-//  void Floyd::findPath(std::list<int>& path, int i, int j)
-// 
-// Therefore, the class member 'path' can be avoid. Because the 'path' just
-// querying results, therefore, it is not necessary to be class member
-void Floyd::findPath(int i, int j)
+void Floyd::findPath(std::list<int>& path,int i, int j)
 {
     path.push_back(i);
     if (j == p[i][j])
@@ -144,16 +136,16 @@ void Floyd::findPath(int i, int j)
         path.push_back(j);
         return;
     }
-    findPath(p[i][j], j);
+    findPath(path,p[i][j], j);
 }
 
 void Floyd::printP()
 {
-    for (int i = 0; i < v; ++i)
+    for (int i = 0; i < v_n; ++i)
     {
-        for (int j = 0; j < v; ++j)
+        for (int j = 0; j < v_n; ++j)
         {
-            if (j == v - 1)
+            if (j == v_n - 1)
             {
                 cout << p[i][j] << endl;
             }

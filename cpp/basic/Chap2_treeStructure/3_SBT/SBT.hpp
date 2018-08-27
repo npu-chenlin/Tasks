@@ -6,9 +6,6 @@
 #include <vector>
 #include <memory>
 
-
-// FIXME: 'std::shared_ptr<SBTNode<T>>' is too long, how about define a macro, 
-//         to reduce the code length and make the code clear to read
 #define pSBTNode std::shared_ptr<SBTNode<T> >
 
 template <typename T> class SBT;
@@ -18,26 +15,26 @@ template <typename T> class SBTNode
 public:
     SBTNode()
     {
-        data   = 0;         // FIXME: if 'T' is not int, then this will be failed
+        data   = NULL;
         lChild = rChild = parent = NULL;
     }
     explicit SBTNode(T newData)
     {
-        data   = newData;
+        data   = std::make_shared<T>(newData);
         lChild = rChild = parent = NULL;
     }
 
     ~SBTNode() {}
 
-    void setData(T newData) {data = newData;}
-    T getData() {return data;}
+    void setData(T newData) {data   = std::make_shared<T>(newData);}
+    T getData() {return *data;}
     pSBTNode getLChild() {return lChild;}
     pSBTNode getRChild() {return rChild;}
     pSBTNode getParent() {return parent;}
 
 private:
     friend class SBT<T>;
-    T data;
+    std::shared_ptr<T> data;
     pSBTNode lChild, rChild, parent;
 };
 
@@ -46,7 +43,7 @@ template <typename T> class SBT
 public:
     SBT()
     {
-        root = pSBTNode(NULL);
+        root = pSBTNode();
     }
     explicit SBT(T newData)
     {
@@ -98,14 +95,14 @@ template <typename T> void SBT<T>::inOrder(pSBTNode node)
     if (node != NULL)
     {
         inOrder(node->lChild);
-        std::cout << node->data << std::endl;
+        std::cout << *(node->data) << std::endl;
         inOrder(node->rChild);
     }
 }
 
 template <typename T> void SBT<T>::insertNode(pSBTNode node)
 {
-    if (root->data == 0)
+    if (root->data == NULL)
     {
         root->data = node->data;
         return;
@@ -116,7 +113,7 @@ template <typename T> void SBT<T>::insertNode(pSBTNode node)
     while (temp != NULL)
     {
         cur = temp;
-        if (node->data < temp->data)
+        if (*(node->data) < *(temp->data))
         {
             temp = temp->lChild;
         }
@@ -127,7 +124,7 @@ template <typename T> void SBT<T>::insertNode(pSBTNode node)
     }
 
     node->parent = cur;
-    if (node->data < cur->data)
+    if (*(node->data) < *(cur->data))
     {
         cur->lChild = node;
     }

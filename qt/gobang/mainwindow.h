@@ -2,22 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QApplication>
+#include <QMainWindow>
 #include <QWidget>
 #include <QPainter>
 #include <QMouseEvent>
 #include <QMessageBox>
-struct trend{
-    int Num;
-    bool isEmpty;
-};
 
-struct Point{
-    int x;
-    int y;
-    trend dir[8];
-    int score;
-};
-
+#include "player.h"
+namespace Ui {
+class MainWindow;
+}
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -25,10 +19,6 @@ class MainWindow : public QWidget
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-    Point evaluater(int, int, bool);//0 is white , 1 is black
-    Point dropChessman(bool);
-    void thinker(bool player);
 
     static const int SIZE = 15;
     const int WIDTH = 30;
@@ -41,12 +31,11 @@ private slots:
 
 private:
     void paintEvent(QPaintEvent *);//绘图函数声明
-    bool isWin(int , int);
     QPainter paint;
 
 private:
-    friend class ComputerPlayer;
     int m[SIZE - 1][SIZE - 1];
+    Player computer((int*)m,SIZE);
     int steps = 0;
 };
 
