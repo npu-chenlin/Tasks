@@ -7,3 +7,5 @@ untitled.cpp
 build*
 bin
 qt
+Makefile
+*.o
