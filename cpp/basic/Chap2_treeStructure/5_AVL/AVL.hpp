@@ -15,7 +15,7 @@ public:
     {
         data   = 0;
         h      = 0;
-        lChild = rChild = parent = NULL;
+        lChild = rChild = parent = AVLNode<T>::nil;
     }
     explicit AVLNode(T newData)
     {
@@ -63,9 +63,9 @@ public:
     }
 
     std::shared_ptr<AVLNode<T>> getRoot() {return root;}
-    void add(T newData);
+    void addNode(T newData);
     void del(T Data);
-    void insertNode(std::shared_ptr<AVLNode<T>> node);
+    void insertNode(std::shared_ptr<AVLNode<T> > &node);
     void deleteNode(std::shared_ptr<AVLNode<T>> node);
 
     void insertKeepAVL(std::shared_ptr<AVLNode<T>> node);
@@ -77,6 +77,7 @@ public:
     void rightLeftRotated(std::shared_ptr<AVLNode<T>> node);
 
     void inOrder(std::shared_ptr<AVLNode<T>> node);
+    void preOrder(std::shared_ptr<AVLNode<T>> node);
 
     void AVLTransPlant(std::shared_ptr<AVLNode<T> > be_replaced, std::shared_ptr<AVLNode<T> > replace);
 
@@ -86,7 +87,9 @@ private:
 
 template <typename T> int getBlanceFactor(std::shared_ptr<AVLNode<T>> node)
 {
-    return node->getRChild()->getH()-node->getLChild()->getH();
+    if(node != AVLNode<T>::nil)
+    return node->getRChild()->getH() - node->getLChild()->getH();
+    else return 0;
 }
 
 template <typename T> std::shared_ptr<AVLNode<T>> AVLSearch(std::shared_ptr<AVLNode<T>> node , T data)
@@ -124,7 +127,17 @@ template <typename T> void AVLRefreshHeight(std::shared_ptr<AVLNode<T>> node)
     node->setH(std::max(node->getLChild()->getH(),node->getRChild()->getH()) + 1);
 }
 
-template <typename T> void AVL<T>::add(T newData)
+template <typename T> void AVL<T>::preOrder(std::shared_ptr<AVLNode<T>> node)
+{
+    if (node != AVLNode<T>::nil)
+    {
+        std::cout << node->data<<" ";
+        preOrder(node->lChild);
+        preOrder(node->rChild);
+    }
+}
+
+template <typename T> void AVL<T>::addNode(T newData)
 {
     std::shared_ptr<AVLNode<T>> p(new AVLNode<T>(newData));
     insertNode(p);
@@ -145,11 +158,11 @@ template <typename T> void AVL<T>::inOrder(std::shared_ptr<AVLNode<T>> node)
     }
 }
 
-template <typename T> void AVL<T>::insertNode(std::shared_ptr<AVLNode<T>> node)
+template <typename T> void AVL<T>::insertNode(std::shared_ptr<AVLNode<T>>& node)
 {
-    if (root->data == 0)
+    if (root == AVLNode<T>::nil)
     {
-        root->data = node->data;
+        root = node;
         return;
     }
 
