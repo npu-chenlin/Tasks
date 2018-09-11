@@ -15,13 +15,13 @@ public:
     {
         data   = 0;
         h      = 0;
-        lChild = rChild = parent = AVLNode<T>::nil;
+        lChild = rChild = parent = predecessor = successor =AVLNode<T>::nil;
     }
     explicit AVLNode(T newData)
     {
         data   = newData;
         h      = 1;
-        lChild = rChild = parent = AVLNode<T>::nil;
+        lChild = rChild = parent = predecessor = successor =AVLNode<T>::nil;
     }
 
     ~AVLNode() {}
@@ -36,12 +36,14 @@ public:
     std::shared_ptr<AVLNode<T>> getLChild() {return lChild;}
     std::shared_ptr<AVLNode<T>> getRChild() {return rChild;}
     std::shared_ptr<AVLNode<T>> getParent() {return parent;}
+    std::shared_ptr<AVLNode<T>> getPredecessor() {return predecessor;}
+    std::shared_ptr<AVLNode<T>> getSucessor() {return successor;}
 
 private:
     friend class AVL<T>;
     T data;
     int h;
-    std::shared_ptr<AVLNode<T>> lChild, rChild, parent;
+    std::shared_ptr<AVLNode<T>> lChild, rChild, parent ,predecessor,successor;
 };
 
 template <typename T> std::shared_ptr<AVLNode<T>> AVLNode<T>::nil = std::make_shared<AVLNode<T>>();
@@ -81,6 +83,7 @@ public:
 
     void AVLTransPlant(std::shared_ptr<AVLNode<T> > be_replaced, std::shared_ptr<AVLNode<T> > replace);
 
+    void changeIntoLinkedlist(std::shared_ptr<AVLNode<T>> node);
 private:
         std::shared_ptr<AVLNode<T>> root;
 };
@@ -107,24 +110,39 @@ template <typename T> std::shared_ptr<AVLNode<T>> AVLFindMinimum(std::shared_ptr
 
 template <typename T> std::shared_ptr<AVLNode<T>> AVLFindMaximum(std::shared_ptr<AVLNode<T>> node)
 {
-    while (node->getRChild() != AVLNode<T>::nil)node = node -> rChild;
+    while (node->getRChild() != AVLNode<T>::nil)node = node -> getRChild();
     return node;
 }
 
 template <typename T> std::shared_ptr<AVLNode<T>> AVLFindSuccessor(std::shared_ptr<AVLNode<T>> node)
 {
-    if(node->rChild) return AVLFindMinimum(node->rChild);
-    while( node -> parent -> lChild != node)
+    if(node->getRChild() != AVLNode<T>::nil) return AVLFindMinimum(node->getRChild());
+    while( node -> getParent() -> getLChild() != node)
     {
-        node = node -> parent;
-        if(node = AVLNode<T>::nil) return node;
+        node = node -> getParent();
+        if(node == AVLNode<T>::nil) return node;
     }
-    return node -> parent;
+    return node -> getParent();
+}
+
+template <typename T> std::shared_ptr<AVLNode<T>> AVLFindPredecessor(std::shared_ptr<AVLNode<T>> node)
+{
+    if(node->getLChild() != AVLNode<T>::nil) return AVLFindMaximum(node->getLChild());
+    while( node -> getParent() -> getRChild() != node)
+    {
+        node = node -> getParent();
+        if(node == AVLNode<T>::nil) return node;
+    }
+    return node -> getParent();
 }
 
 template <typename T> void AVLRefreshHeight(std::shared_ptr<AVLNode<T>> node)
 {
-    node->setH(std::max(node->getLChild()->getH(),node->getRChild()->getH()) + 1);
+    if(!node->getLChild() && node->getRChild()) {node->setH(node->getRChild()->getH() + 1);return;}
+    else if(!node->getRChild() && node->getLChild()) {node->setH(node->getLChild()->getH() + 1);return;}
+    else if(!node->getRChild() && !node->getLChild()) node->setH(1);
+    else
+        node->setH(std::max(node->getLChild()->getH(),node->getRChild()->getH()) + 1);
 }
 
 template <typename T> void AVL<T>::preOrder(std::shared_ptr<AVLNode<T>> node)
@@ -383,6 +401,17 @@ template <typename T> void AVL<T>::deleteKeepAVL(std::shared_ptr<AVLNode<T>> nod
         {
             rightLeftRotated(node);
         }
+    }
+}
+
+template <typename T> void AVL<T>::changeIntoLinkedlist(std::shared_ptr<AVLNode<T>> node)
+{
+    if (node != AVLNode<T>::nil)
+    {
+        changeIntoLinkedlist(node->lChild);
+        node->predecessor = AVLFindPredecessor(node);
+        node->successor = AVLFindSuccessor(node);
+        changeIntoLinkedlist(node->rChild);
     }
 }
 

@@ -44,9 +44,9 @@ int main(long argc, char const *argv[])
 	}
     for (long i = 0; i < n; ++i)
 	{
-        for (long j = 0; j < i; ++j)
+        for (long j = 0; j <= i; ++j)
 		{
-            for (long k = i+1; k < n; ++k)
+            for (long k = i; k < n; ++k)
 			{
                 dp[j][k] = min(dp[j][k],dp[j][i]+dp[i][k]);
 			}

@@ -8,33 +8,32 @@ int main(int argc, char const *argv[])
 {
     AVL<int> tree;
     ifstream fin;
+    ofstream fout;
     fin.open("test.in");
+    fout.open("dll.txt");
     string s;
     int i;
-    bool flag = 1;
-    while(!fin.eof())
+    while(fin.good())
     {
         fin>>s;
         i = atoi(s.c_str());
-        if(s == "del:")
-        {
-            flag = 0;
-            continue;
-        }
-        else if(s == "add:")
-        {
-            flag = 1;
-            continue;
-        }
-        if(flag)
-        {
-            tree.addNode(i);
-        }
-        else
-        {
-            tree.del(i);
-        }
+        tree.addNode(i);
     }
-    tree.preOrder(tree.getRoot());
+    tree.changeIntoLinkedlist(tree.getRoot());
+    std::shared_ptr<AVLNode<int>> cur = tree.getRoot();
+    while(cur->getLChild() != AVLNode<int>::nil) cur = cur->getLChild();
+
+    while(1)
+    {
+        if(cur->getSucessor() == AVLNode<int>::nil)
+        {
+            fout<<cur->getData();
+            break;
+        }
+        fout<<cur->getData()<<"<=>";
+        cur = cur->getSucessor();
+    }
+    fin.close();
+    fout.close();
     return 0;
 }

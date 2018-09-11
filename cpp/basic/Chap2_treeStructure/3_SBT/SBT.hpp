@@ -4,9 +4,10 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <list>
 #include <memory>
 
-#define pSBTNode std::shared_ptr<SBTNode<T> >
+#define pSBTNode std::shared_ptr<SBTNode<T>>
 
 template <typename T> class SBT;
 
@@ -15,13 +16,13 @@ template <typename T> class SBTNode
 public:
     SBTNode()
     {
-        data   = NULL;
-        lChild = rChild = parent = NULL;
+        data   = std::make_shared<T>(-9999999);
+        lChild = rChild = parent = predecessor = successor =NULL;
     }
     explicit SBTNode(T newData)
     {
         data   = std::make_shared<T>(newData);
-        lChild = rChild = parent = NULL;
+        lChild = rChild = parent = predecessor = successor =NULL;
     }
 
     ~SBTNode() {}
@@ -31,6 +32,10 @@ public:
     pSBTNode getLChild() {return lChild;}
     pSBTNode getRChild() {return rChild;}
     pSBTNode getParent() {return parent;}
+    std::shared_ptr<SBTNode<T>> getPredecessor() {return predecessor;}
+    std::shared_ptr<SBTNode<T>> getSucessor() {return successor;}
+
+    pSBTNode predecessor,successor;
 
 private:
     friend class SBT<T>;
@@ -43,7 +48,7 @@ template <typename T> class SBT
 public:
     SBT()
     {
-        root = pSBTNode();
+        root = std::shared_ptr<SBTNode<T>>();
     }
     explicit SBT(T newData)
     {
@@ -61,13 +66,14 @@ public:
 
     void add(T newData);
     void del(T Data);
-    void insertNode(pSBTNode node);
+    void insertNode(pSBTNode& node);
     void deleteNode(pSBTNode node);
 
-    void inOrder(pSBTNode node);
+    void inOrder(std::vector<std::shared_ptr<SBTNode<T> > > &l, pSBTNode node);
 
     void SBTTransPlant(pSBTNode be_replaced, pSBTNode replace);
 
+    void changeIntoLinkedlist();
 private:
         pSBTNode root;
 };
@@ -90,21 +96,21 @@ template <typename T> void SBT<T>::del(T Data)
     deleteNode(SBTSearch(root,Data));
 }
 
-template <typename T> void SBT<T>::inOrder(pSBTNode node)
+template <typename T> void SBT<T>::inOrder(std::vector<pSBTNode>& l,pSBTNode node)
 {
     if (node != NULL)
     {
-        inOrder(node->lChild);
-        std::cout << *(node->data) << std::endl;
-        inOrder(node->rChild);
+        inOrder(l,node->lChild);
+        l.push_back(node);
+        inOrder(l,node->rChild);
     }
 }
 
-template <typename T> void SBT<T>::insertNode(pSBTNode node)
+template <typename T> void SBT<T>::insertNode(pSBTNode& node)
 {
-    if (root->data == NULL)
+    if (*(root->data) == -9999999)
     {
-        root->data = node->data;
+        *(root->data) = *(node->data);
         return;
     }
 
@@ -140,19 +146,30 @@ template <typename T> pSBTNode SBTFindMinimum(pSBTNode node)
 
 template <typename T> pSBTNode SBTFindMaximum(pSBTNode node)
 {
-    while (node->getRChild() != NULL)node = node -> rChild;
+    while (node->getRChild() != NULL)node = node -> getRChild();
     return node;
 }
 
-template <typename T> pSBTNode SBTFindSuccessor(pSBTNode node)
+template <typename T> std::shared_ptr<SBTNode<T>> SBTFindSuccessor(std::shared_ptr<SBTNode<T>> node)
 {
-    if(node->rChild) return SBTFindMinimum(node->rChild);
-    while( node -> parent -> lChild != node)
+    if(node->getRChild() != NULL) return SBTFindMinimum(node->getRChild());
+    while( node -> getParent() -> getLChild() != node)
     {
-        node = node -> parent;
-        if(node = NULL) return node;
+        node = node -> getParent();
+        if(node->getParent() == NULL) return node;
     }
-    return node -> parent;
+    return node -> getParent();
+}
+
+template <typename T> std::shared_ptr<SBTNode<T>> SBTFindPredecessor(std::shared_ptr<SBTNode<T>> node)
+{
+    if(node->getLChild() != NULL) return SBTFindMaximum(node->getLChild());
+    while( node -> getParent() -> getRChild() != node)
+    {
+        node = node -> getParent();
+        if(node->getParent() == NULL) return NULL;
+    }
+    return node -> getParent();
 }
 
 template <typename T> void SBT<T>::SBTTransPlant(pSBTNode be_replaced,pSBTNode replace)
@@ -185,5 +202,20 @@ template <typename T> void SBT<T>::deleteNode(pSBTNode node)
     }
 }
 
+template <typename T> void SBT<T>::changeIntoLinkedlist()
+{
+    std::vector<pSBTNode> l;
+    inOrder(l,root);
+    for(int i = 0;i<l.size();++i)
+    {
+        if(i == l.size()-1)
+        {
+            l[i]->successor = NULL;
+            return;
+        }
+        l[i]->successor = l[i+1];
+        l[i+1]->predecessor = l[i];
+    }
+}
 #endif
 

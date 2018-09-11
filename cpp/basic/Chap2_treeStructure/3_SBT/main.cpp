@@ -1,24 +1,41 @@
 #include <iostream>
-
+#include <fstream>
 #include "SBT.hpp"
 
 using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    // FIXME: how to test the algorithm using recorded data
-    //         using file to test the algorithm, maybe some bugs can be found
-    
-    SBT<int> tree(4);
-    for(int i = 1;i<10;i++)
+    ifstream fin;
+    ofstream fout;
+    fin.open("test.in");
+    fout.open("dll.txt");
+    string s;
+    int i;
+    fin>>s;
+    i = atoi(s.c_str());
+    SBT<int> tree(i);
+    while(fin.good())
     {
-        if(i!=4)
-        {tree.add(i);}
+        fin>>s;
+        i = atoi(s.c_str());
+        tree.add(i);
     }
+    tree.changeIntoLinkedlist();
+    std::shared_ptr<SBTNode<int>> cur = tree.getRoot();
+    while(cur->getLChild() != NULL) cur = cur->getLChild();
 
-    tree.del(4);
-    tree.del(3);
-    tree.inOrder(tree.getRoot());
-
+    while(1)
+    {
+        if(cur->getSucessor() == NULL)
+        {
+            fout<<cur->getData();
+            break;
+        }
+        fout<<cur->getData()<<"<=>";
+        cur = cur->getSucessor();
+    }
+    fin.close();
+    fout.close();
     return 0;
 }
