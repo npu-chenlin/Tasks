@@ -11,6 +11,8 @@ using namespace std;
 
 bool g_bDrawBox = false;
 Rect g_rectangle;
+RNG rng;
+Scalar color;
 void on_MounseHandle(int event,int x, int y,int flags, void* param)
 {
     Mat img = *(Mat*) param;
@@ -35,7 +37,8 @@ void on_MounseHandle(int event,int x, int y,int flags, void* param)
                 tempRect.y += tempRect.height;
                 tempRect.height *=-1;
             }
-            rectangle(temp,tempRect,Scalar(0,255,0,0));
+            cout<<color<<endl;
+            rectangle(temp,tempRect,color);
             imshow(WINDOW_NAME,temp);
         }
     }
@@ -44,6 +47,7 @@ void on_MounseHandle(int event,int x, int y,int flags, void* param)
     {
         g_bDrawBox = true;
         g_rectangle = Rect(x,y,0,0);
+        color = Scalar(rng.uniform(0,255),rng.uniform(0,255),rng.uniform(0,255));
     }
         break;
     case EVENT_LBUTTONUP:
@@ -59,7 +63,7 @@ void on_MounseHandle(int event,int x, int y,int flags, void* param)
             g_rectangle.y += g_rectangle.height;
             g_rectangle.height *=-1;
         }
-        rectangle(img,g_rectangle,Scalar(0,255,0,0));
+        rectangle(img,g_rectangle,color);
         imshow(WINDOW_NAME,img);
     }
         break;

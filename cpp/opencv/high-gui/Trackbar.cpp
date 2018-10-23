@@ -1,39 +1,38 @@
-#include <opencv2/video/tracking.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
-#include <iostream>
-#include <ctype.h>
 #define WINDOW_NAME "Alpha"
 
 using namespace cv;
 using namespace std;
 
-Mat g_srcImg1;
-Mat g_srcImg2;
-Mat g_dstImg;
+Mat tempImg;
+Mat srcImg1;
+Mat srcImg2;
+Mat dstImg;
 
-const int g_nMaxAlphaValue = 100;
-int g_nAlphaValueSlider;
-double g_dAlphaValue;
-double g_dBetaValue;
+const int MaxAlphaValue = 100;
+int AlphaValueSlider;
+double dAlphaValue;
+double dBetaValue;
 
 void on_Trackbar(int,void*)
 {
-    g_dAlphaValue = (double) g_nAlphaValueSlider/g_nMaxAlphaValue;
-    g_dBetaValue = 1 - g_dAlphaValue;
-    addWeighted(g_srcImg1,g_dAlphaValue,g_srcImg2,g_dBetaValue,0,g_dstImg);
-    imshow(WINDOW_NAME,g_dstImg);
+    dAlphaValue = (double) AlphaValueSlider/MaxAlphaValue;
+    dBetaValue = 1 - dAlphaValue;
+    addWeighted(srcImg1,dAlphaValue,srcImg2,dBetaValue,0,dstImg);
+    imshow(WINDOW_NAME,dstImg);
 }
 
 int main(int argc,char** argv)
 {
     namedWindow(WINDOW_NAME,1);
-    g_srcImg1 = imread("C:\\Users\\chenll\\Desktop\\1.png");
-    g_srcImg2 = imread("C:\\Users\\chenll\\Desktop\\2.png");
-    g_nAlphaValueSlider = 70;
-    createTrackbar("mixed",WINDOW_NAME,&g_nAlphaValueSlider,g_nMaxAlphaValue,on_Trackbar);
+    tempImg = imread("../high-gui/1.jpg");
+    resize(tempImg,srcImg1,Size(640,480));
+    tempImg = imread("../high-gui/2.jpg");
+    resize(tempImg,srcImg2,Size(640,480));
+    AlphaValueSlider = 70;
+    createTrackbar("mixed",WINDOW_NAME,&AlphaValueSlider,MaxAlphaValue,on_Trackbar);
     waitKey(0);
     return 0;
 }
