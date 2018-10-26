@@ -2,14 +2,11 @@
 using namespace cv;
 using namespace std;
 
+String url = "../imgproc/test.jpg";
+
 int main(int argc, char *argv[])
 {
-    Mat img = imread("/home/chenlin/my_progs/Tasks/cpp/opencv/basic-image-process/test.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-    if(img.empty())
-    {
-        cout<<"load faild"<<endl;
-        return -1;
-    }
+    Mat img = imread(url,CV_LOAD_IMAGE_GRAYSCALE);
     resize(img,img,Size(640,480));
     int th = 100;
     //globally binaryzation

@@ -3,9 +3,10 @@
 
 using namespace cv;
 using namespace std;
+String url = "../imgproc/test.jpg";
 int main()
 {
-    Mat SrcPic = imread("/home/chenlin/my_progs/Tasks/cpp/opencv/basic-image-process/test.jpg");
+    Mat SrcPic = imread(url);
     Mat element = getStructuringElement(MORPH_RECT, Size(15, 15)); //getStructuringElement函数返回的是指定形状和尺寸的结构元素
     resize(SrcPic,SrcPic,Size(640,480));
     imshow("Src Pic", SrcPic);

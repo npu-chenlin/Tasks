@@ -5,8 +5,7 @@
 using namespace std;
 using namespace cv;
 //仿射变换实验
-
-String url = "/home/chenlin/my_progs/Tasks/cpp/opencv/imgproc/test.jpg";
+String url = "../imgproc/test.jpg";
 int main()
 {
     Mat src = imread(url);

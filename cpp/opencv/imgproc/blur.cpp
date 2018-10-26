@@ -4,6 +4,7 @@
 using namespace cv;
 using namespace std;
 
+String url = "../imgproc/test.jpg";
 String windowName = "blur";
 Mat DstPic;
 void on_change(int kernelSize, void* img)
@@ -16,7 +17,7 @@ int main()
 {
     int kernelSize = 2;
     namedWindow(windowName);
-    Mat SrcPic = imread("/home/chenlin/my_progs/Tasks/cpp/opencv/imgproc/test.jpg");
+    Mat SrcPic = imread(url);
     resize(SrcPic,SrcPic,Size(640,480));
     createTrackbar("kernelSize",windowName,&kernelSize,7,on_change,&SrcPic);
     waitKey(0);
