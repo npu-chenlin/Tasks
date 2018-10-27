@@ -32,26 +32,26 @@ int main()
     SurfDescriptor.compute(image2, keyPoint2, imageDesc2);
 
     FlannBasedMatcher matcher;
-    vector<vector<DMatch> > matchePoints;
-    vector<DMatch> GoodMatchePoints;
+    vector<vector<DMatch> > matchPoints;
+    vector<DMatch> GoodmatchPoints;
 
     vector<Mat> train_desc(1, imageDesc1);
     matcher.add(train_desc);
     matcher.train();
 
-    matcher.knnMatch(imageDesc2, matchePoints ,2);
-    cout << "total match points: " << matchePoints.size() << endl;
+    matcher.knnMatch(imageDesc2, matchPoints ,2);
+    cout << "total match points: " << matchPoints.size() << endl;
     // Lowe's algorithm,获取优秀匹配点
-    for (int i = 0; i < matchePoints.size(); i++)
+    for (int i = 0; i < matchPoints.size(); i++)
     {
-        if (matchePoints[i][0].distance < 0.5 * matchePoints[i][1].distance)
+        if (matchPoints[i][0].distance < 0.5 * matchPoints[i][1].distance)
         {
-           GoodMatchePoints.push_back(matchePoints[i][0]);
+           GoodmatchPoints.push_back(matchPoints[i][0]);
         }
     }
 
     Mat result_match;
-    drawMatches(image02, keyPoint2, image01, keyPoint1, GoodMatchePoints, result_match);
+    drawMatches(image02, keyPoint2, image01, keyPoint1, GoodmatchPoints, result_match);
     imshow("result_match ", result_match);
     waitKey();
     return 0;
