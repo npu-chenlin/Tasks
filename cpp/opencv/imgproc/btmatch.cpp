@@ -32,29 +32,33 @@ int main()
     SurfDescriptor.compute(image2, keyPoint2, imageDesc2);
 
     BruteForceMatcher<L2<float>> matcher;
-    vector<vector<DMatch>> MatchPoints;
+    vector<DMatch> MatchPoints;
     vector<DMatch> GoodMatchPoints;
-    matcher.knnMatch(imageDesc1,imageDesc2,MatchPoints,2);
-
+    matcher.match(imageDesc1,imageDesc2,MatchPoints);
 
 //    vector<Mat> train_desc(1, imageDesc1);
 //    matcher.add(train_desc);
 //    matcher.train();
 
-//    matcher.knnMatch(imageDesc2, matchePoints ,2);
-//    cout << "total match points: " << matchePoints.size() << endl;
+//    matcher.knnMatch(imageDesc2, MatchPoints ,2);
+    cout << "total match points: " << MatchPoints.size() << endl;
 //    // Lowe's algorithm,获取优秀匹配点
-//    for (int i = 0; i < matchePoints.size(); i++)
+//    for (int i = 0; i < MatchPoints.size(); i++)
 //    {
-//        if (matchePoints[i][0].distance < 0.5 * matchePoints[i][1].distance)
+//        if (MatchPoints[i][0].distance < 0.5 * MatchPoints[i][1].distance)
 //        {
-//           GoodMatchePoints.push_back(matchePoints[i][0]);
+//           GoodMatchPoints.push_back(MatchPoints[i][0]);
 //        }
 //    }
-
-//    Mat result_match;
-//    drawMatches(image02, keyPoint2, image01, keyPoint1, GoodMatchePoints, result_match);
-//    imshow("result_match ", result_match);
-//    waitKey();
+    auto minDistance = min_element(MatchPoints.begin(),MatchPoints.end());
+    for(auto i : MatchPoints)
+    {
+        if(i.distance < 2*(minDistance->distance))
+            GoodMatchPoints.push_back(i);
+    }
+    Mat result_match;
+    drawMatches(image01, keyPoint1,image02, keyPoint2, GoodMatchPoints, result_match);
+    imshow("result_match ", result_match);
+    waitKey();
     return 0;
 }
