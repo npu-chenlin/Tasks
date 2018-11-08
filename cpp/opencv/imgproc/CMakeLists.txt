@@ -9,6 +9,6 @@ find_package( OpenCV 2 REQUIRED )
 # 添加头文件
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
-add_executable(imgprocess motionDetection.cpp )
+add_executable(imgprocess imgcat.cpp )
 # 链接OpenCV库
 target_link_libraries( imgprocess ${OpenCV_LIBS} )
