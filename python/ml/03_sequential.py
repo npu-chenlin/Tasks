@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torchvision.datasets import mnist # 导入 pytorch 内置的 mnist 数据
-
+from torch.utils.data import DataLoader
 from torch import nn
 from torch.autograd import Variable
 
@@ -15,7 +15,7 @@ def data_tf(x):
 train_set = mnist.MNIST('../../data/mnist', train=True, transform=data_tf,download=0)
 test_set  = mnist.MNIST('../../data/mnist', train=False, transform=data_tf,download=0)
 
-from torch.utils.data import DataLoader
+
 # 使用 pytorch 自带的 DataLoader 定义一个数据迭代器
 train_data = DataLoader(train_set, batch_size=64, shuffle=True)
 test_data = DataLoader(test_set, batch_size=128, shuffle=False)
@@ -54,10 +54,10 @@ for e in range(20):
         loss.backward()
         optimizer.step()
         # 记录误差
-        train_loss += loss.data[0]
+        train_loss += loss.data
         # 计算分类的准确率
         _, pred = out.max(1)
-        num_correct = float((pred == label).sum().data[0])
+        num_correct = float((pred == label).sum().data)
         acc = num_correct / im.shape[0]
         train_acc += acc
         
@@ -73,10 +73,10 @@ for e in range(20):
         out = net(im)
         loss = criterion(out, label)
         # 记录误差
-        eval_loss += loss.data[0]
+        eval_loss += loss.data
         # 记录准确率
         _, pred = out.max(1)
-        num_correct = flot((pred == label).sum().data[0])
+        num_correct = float((pred == label).sum().data)
         acc = num_correct / im.shape[0]
         eval_acc += acc
         
