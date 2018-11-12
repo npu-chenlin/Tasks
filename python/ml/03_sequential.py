@@ -7,8 +7,8 @@ from torch.autograd import Variable
 
 def data_tf(x):
     x = np.array(x, dtype='float32') / 255
-    x = (x - 0.5) / 0.5 # 标准化，这个技巧之后会讲到
-    x = x.reshape((-1,)) # 拉平
+    x = x/0.5 - 1
+    x = x.reshape((-1,)) 
     x = torch.from_numpy(x)
     return x
 
@@ -16,10 +16,10 @@ train_set = mnist.MNIST('../../data/mnist', train=True, transform=data_tf,downlo
 test_set  = mnist.MNIST('../../data/mnist', train=False, transform=data_tf,download=0)
 
 
-# 使用 pytorch 自带的 DataLoader 定义一个数据迭代器
+
 train_data = DataLoader(train_set, batch_size=64, shuffle=True)
 test_data = DataLoader(test_set, batch_size=128, shuffle=False)
-# 使用 Sequential 定义 4 层神经网络
+
 net = nn.Sequential(
     nn.Linear(784, 400),
     nn.ReLU(),
@@ -29,11 +29,11 @@ net = nn.Sequential(
     nn.ReLU(),
     nn.Linear(100, 10)
 )
-# 定义 loss 函数
+
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(net.parameters(), 1e-1) # 使用随机梯度下降，学习率 0.1
 
-# 开始训练
+
 losses = []
 acces = []
 eval_losses = []
